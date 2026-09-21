@@ -378,7 +378,7 @@ function cardioBlock(L){
       <button type="button" class="go rec" data-rec="${ph.min*60}" data-name="Cardio">${playIcon}Avvia ${ph.min} minuti</button>
       <ol class="prog" aria-label="Progressione">${rows}</ol>
       <dl>
-        <div><dt>Come si fa</dt><dd>${tread ? "Camminata a ritmo costante, niente corsa. Mani lontane dalle maniglie. Quando è facile alza prima la pendenza, poi la velocità." : "Sella all'altezza dell'anca, gamba quasi distesa in basso. Pedalata regolare, 60–70 giri al minuto."}</dd></div>
+        <div><dt>Come si fa</dt><dd>${tread ? "Camminata a ritmo costante, niente corsa. Mani lontane dalle maniglie. Quando è facile alza prima la pendenza, poi la velocità. Ultimi 2 minuti con pendenza a 0, stessa velocità: è il defaticamento." : "Sella all'altezza dell'anca, gamba quasi distesa in basso. Pedalata regolare, 60–70 giri al minuto. Ultimi 2 minuti con resistenza al minimo: è il defaticamento."}</dd></div>
         <div><dt>Il ritmo giusto</dt><dd>Devi riuscire a parlare a frasi brevi, ma non a cantare. Se ansimi, abbassa ${tread?"la pendenza":"la resistenza"}. Se potresti fare una telefonata tranquillo, alzala.</dd></div>
         <div><dt class="warn">Attenzione</dt><dd>${tread ? "Se ti fanno male piedi o ginocchia, passa alla cyclette per lo stesso tempo." : "Se senti fastidio al ginocchio, controlla l'altezza della sella prima di tutto."}</dd></div>
       </dl>
