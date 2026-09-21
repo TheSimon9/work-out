@@ -167,6 +167,21 @@ footer a{color:inherit}
 .databtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .databtn{border:1.5px solid var(--ink);background:#fff;color:var(--ink);border-radius:12px;padding:12px;font:600 .9rem/1 var(--body);cursor:pointer;text-align:center}
 
+
+/* cardio */
+.cardio .week-badge{display:inline-block;font:600 .75rem/1 var(--body);background:var(--ink);color:#fff;border-radius:20px;padding:5px 9px;margin-left:6px;vertical-align:middle}
+.go{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:0;border-radius:12px;background:var(--accent);color:#fff;font:600 1rem/1 var(--body);padding:14px;cursor:pointer;margin:4px 0 14px}
+.go svg{width:18px;height:18px}
+.go:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.prog{list-style:none;margin:0 0 12px;border-radius:12px;overflow:hidden;background:#fff}
+.prog li{display:grid;grid-template-columns:5.5em 1fr auto auto;align-items:center;gap:8px;padding:9px 12px;font-size:.88rem;color:var(--muted);border-top:1px solid var(--line)}
+.prog li:first-child{border-top:0}
+.prog li b{color:var(--ink);font-weight:600}
+.prog li.now{background:var(--accent-l);color:var(--ink)}
+.prog li.now::after{content:"ora";font:600 .72rem/1.6 var(--body);color:#fff;background:var(--accent);border-radius:20px;padding:0 8px}
+.sets.c3{grid-template-columns:1fr 1fr 1fr}
+.sets.c2{grid-template-columns:1fr 1fr}
+
 [hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){.timer{transition:none}}
 </style>
@@ -323,6 +338,61 @@ function logBlock(L, i, k){
   </form>`;
 }
 
+
+/* ---------- cardio ---------- */
+const PHASES = [
+  {from:1, to:2, min:15, label:"15 min", inc:"5%", kmh:"5,1"},
+  {from:3, to:4, min:20, label:"20 min", inc:"7%", kmh:"5,1"},
+  {from:5, to:99, min:22, label:"20–25 min", inc:"8–10%", kmh:"5,3"},
+];
+function planWeek(){
+  const dates = Object.values(DB.logs).flat().map(e => e.d).sort();
+  if(!dates.length) return 1;
+  const days = Math.floor((new Date(today()+"T12:00") - new Date(dates[0]+"T12:00")) / 86400000);
+  return Math.floor(days / 7) + 1;
+}
+const playIcon = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.2-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>';
+function cardioBlock(L){
+  const slot = `${L}:cardio`, k = DB.swaps[slot] === "bike" ? "bike" : "treadmill";
+  const wk = planWeek(), ph = PHASES.find(p => wk >= p.from && wk <= p.to);
+  const tread = k === "treadmill";
+  const lk = "cardio_" + k, all = DB.logs[lk] || [];
+  const prev = all.filter(e => e.d !== today()).slice(-1)[0], todayE = all.find(e => e.d === today());
+  const txt = e => tread ? `${e.min} min · ${e.inc}% · ${e.kmh} km/h` : `${e.min} min · livello ${e.lvl}`;
+  const rows = PHASES.map(p => `<li class="${p===ph?"now":""}"><span>Sett. ${p.from}${p.to<99?"–"+p.to:"+"}</span><b>${p.label}</b>${tread?`<span>${p.inc} · ${p.kmh} km/h</span>`:"<span></span>"}</li>`).join("");
+  const fields = tread
+    ? [["min","Minuti",prev?.min ?? ph.min],["inc","Pendenza %",prev?.inc ?? parseInt(ph.inc)],["kmh","Km/h",prev?.kmh ?? ph.kmh.replace(",",".")]]
+    : [["min","Minuti",prev?.min ?? ph.min],["lvl","Livello",prev?.lvl ?? "livello"]];
+  const inputs = fields.map(([n,l,ph_]) => `<span class="h">${l}</span>`).join("") +
+    fields.map(([n,l,ph_]) => `<input type="number" inputmode="decimal" step="0.1" min="0" name="${n}" aria-label="${l}" placeholder="${ph_}" value="${todayE?.[n] ?? ""}">`).join("");
+  return `
+  <article class="ex cardio" id="ex-${L}c">
+    <figure><img src="anim/${k}.webp" alt="${tread?"Camminata sul tapis roulant":"Cyclette"}: foto reale" loading="lazy" width="560" height="373"><span class="num">+</span></figure>
+    <div class="ex-body">
+      <h2>Cardio <span class="week-badge">Settimana ${wk}</span></h2>
+      <div class="dose"><strong>${tread ? `${ph.label} · ${ph.inc} · ${ph.kmh} km/h` : `${ph.label} · 60–70 rpm`}</strong></div>
+      <div class="alts" role="group" aria-label="Alternative"><span>Alternative</span>
+        <button type="button" class="alt" data-slot="${slot}" data-k="treadmill" aria-pressed="${tread}">Tapis in salita</button>
+        <button type="button" class="alt" data-slot="${slot}" data-k="bike" aria-pressed="${!tread}">Cyclette</button>
+      </div>
+      <button type="button" class="go rec" data-rec="${ph.min*60}" data-name="Cardio">${playIcon}Avvia ${ph.min} minuti</button>
+      <ol class="prog" aria-label="Progressione">${rows}</ol>
+      <dl>
+        <div><dt>Come si fa</dt><dd>${tread ? "Camminata a ritmo costante, niente corsa. Mani lontane dalle maniglie. Quando è facile alza prima la pendenza, poi la velocità." : "Sella all'altezza dell'anca, gamba quasi distesa in basso. Pedalata regolare, 60–70 giri al minuto."}</dd></div>
+        <div><dt>Il ritmo giusto</dt><dd>Devi riuscire a parlare a frasi brevi, ma non a cantare. Se ansimi, abbassa ${tread?"la pendenza":"la resistenza"}. Se potresti fare una telefonata tranquillo, alzala.</dd></div>
+        <div><dt class="warn">Attenzione</dt><dd>${tread ? "Se ti fanno male piedi o ginocchia, passa alla cyclette per lo stesso tempo." : "Se senti fastidio al ginocchio, controlla l'altezza della sella prima di tutto."}</dd></div>
+      </dl>
+      <form class="log cardio" data-k="${lk}">
+        <h3>Il tuo registro <small>${todayE ? "Salvato oggi" : "I valori grigi sono quelli dell'ultima volta"}</small></h3>
+        ${prev ? `<div class="last"><b>Ultima volta</b>, ${niceDate(prev.d)}: ${txt(prev)}</div>` : ""}
+        <div class="sets ${tread?"c3":"c2"}">${inputs}</div>
+        <button class="save" type="submit">${todayE ? "Aggiorna la sessione di oggi" : "Salva la sessione di oggi"}</button>
+        ${all.length ? `<details class="hist"><summary>Storico (${all.length})</summary><ul>${all.slice(-8).reverse().map(e => `<li><span>${niceDate(e.d)}</span><b>${txt(e)}</b></li>`).join("")}</ul></details>` : ""}
+      </form>
+    </div>
+  </article>`;
+}
+
 /* ---------- viste ---------- */
 function viewPiano(){
   const week = [["Lun","A"],["Mar",""],["Mer","B"],["Gio",""],["Ven","C"],["Sab",""],["Dom",""]]
@@ -332,7 +402,7 @@ function viewPiano(){
       <header><span class="badge">${L}</span><div><h3>${d.day}</h3><p>${d.sub}</p></div></header>
       <ol>${d.slots.map((sl,i) => { const k = current(L,i); return `<li><span>${esc(EX[k].n)}</span><b>${doseOf(L,i,k)}</b></li>`; }).join("")}</ol>
     </a>`).join("");
-  return `<div data-day="A">${hero("Piano di 6 settimane","Full body A·B·C","Tre allenamenti diversi, macchine e cavi, circa 65 minuti.")}
+  return `<div data-day="A">${hero("Piano di 6 settimane","Full body A·B·C","Tre allenamenti diversi, macchine e cavi, circa 65–75 minuti.")}
   <main>
     <h2 class="section">La settimana</h2>
     <div class="week">${week}</div>
@@ -342,7 +412,7 @@ function viewPiano(){
     <div class="blocks">
       <div class="block"><b>10'</b><span>Riscaldo</span><small>Tapis 5% · 5,1 km/h</small></div>
       <div class="block"><b class="hot">40'</b><span>Pesi</span><small>Scheda del giorno</small></div>
-      <div class="block"><b>15'</b><span>Cardio</span><small>Tapis o cyclette</small></div>
+      <div class="block"><b>15–25'</b><span>Cardio</span><small>Cresce ogni 2 settimane</small></div>
     </div>
     <p class="note">Prima del primo esercizio fai sempre 1 serie di riscaldamento da 15 ripetizioni con metà del peso.</p>
 
@@ -383,8 +453,9 @@ function viewDay(L){
   }).join("");
   return `<div data-day="${L}">${hero(`Allenamento ${L} · ${d.day}`, d.sub, `${d.slots.length} esercizi, circa 40 minuti di pesi più cardio.`, L)}
     <main>
-      <div class="tip">Tocca il tempo di recupero dopo ogni serie. Se una macchina è occupata o non c'è, scegli un'alternativa: la scelta resta salvata.</div>
+      <div class="tip">Tocca il tempo di recupero dopo ogni serie. Se una macchina è occupata o non c'è, scegli un'alternativa: la scelta resta salvata. Il cardio è in fondo alla pagina.</div>
       ${cards}
+      ${cardioBlock(L)}
     </main></div>`;
 }
 
@@ -401,7 +472,7 @@ function viewRegole(){
   return `<div data-day="A">${hero("Da sapere","Regole","Cardio, recuperi e cosa fare se qualcosa non va.")}
   <main>
     <h2 class="section">Cardio</h2>
-    <div class="phase"><h3>Tapis roulant</h3><p>Pendenza 5%, 5,1 km/h. Quando è facile alza prima la pendenza, poi la velocità. Mani lontane dalle maniglie.</p></div>
+    <div class="phase"><h3>Tapis roulant</h3><p>Camminata in salita dopo i pesi: 15 minuti al 5% nelle prime due settimane, poi 20 minuti al 7%, poi 20–25 minuti all'8–10%. Trovi tutto in fondo a ogni allenamento, con il timer.</p></div>
     <div class="phase"><h3>Cyclette</h3><p>60–70 pedalate al minuto, resistenza che ti fa sudare senza toglierti il fiato. Ottima quando i piedi sono stanchi.</p></div>
     <h2 class="section">In sala</h2>
     ${rules}
@@ -442,9 +513,10 @@ app.addEventListener("click", e => {
   const a = e.target.closest(".alt");
   if(a){
     const [L,i] = a.dataset.slot.split(":");
-    if(a.dataset.k === DAYS[L].slots[+i].d) delete DB.swaps[a.dataset.slot]; else DB.swaps[a.dataset.slot] = a.dataset.k;
+    const def = i === "cardio" ? "treadmill" : DAYS[L].slots[+i].d;
+    if(a.dataset.k === def) delete DB.swaps[a.dataset.slot]; else DB.swaps[a.dataset.slot] = a.dataset.k;
     persist(); render(true);
-    document.querySelector(`#ex-${L}${i} .alt[data-k="${a.dataset.k}"]`)?.focus({preventScroll:true});
+    document.querySelector(`#ex-${L}${i === "cardio" ? "c" : i} .alt[data-k="${a.dataset.k}"]`)?.focus({preventScroll:true});
     return;
   }
   if(e.target.id === "exp"){
@@ -458,6 +530,21 @@ app.addEventListener("click", e => {
 app.addEventListener("submit", e => {
   const f = e.target.closest("form.log"); if(!f) return;
   e.preventDefault();
+  if(f.classList.contains("cardio")){
+    const entry = {d:today()};
+    f.querySelectorAll("input").forEach(inp => {
+      const v = inp.value !== "" ? inp.value : (isNaN(+inp.placeholder) ? "" : inp.placeholder);
+      if(v !== "") entry[inp.name] = +v;
+    });
+    if(!entry.min){ f.querySelector("input").focus(); return; }
+    const list = DB.logs[f.dataset.k] = DB.logs[f.dataset.k] || [];
+    const idx = list.findIndex(x => x.d === today());
+    if(idx >= 0) list[idx] = entry; else list.push(entry);
+    persist();
+    const btn = f.querySelector(".save"); btn.textContent = "Salvato"; btn.classList.add("ok");
+    setTimeout(() => render(true), 900);
+    return;
+  }
   const k = f.dataset.k, bw = f.dataset.bw, rows = f.querySelectorAll(`input[name^="r"]`);
   const sets = [...rows].map((r, s) => {
     const kgEl = f.querySelector(`input[name="kg${s}"]`);

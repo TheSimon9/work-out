@@ -2,17 +2,15 @@
 
 Webapp statica della scheda di allenamento: 3 sedute a settimana, foto reali animate di ogni esercizio, alternative per ogni macchina, registro di kg e ripetizioni, timer di recupero. Funziona offline dopo la prima apertura.
 
-## Pubblicarla su GitHub Pages
+## Pubblicarla su Vercel
 
-1. Crea un repository nuovo (es. `scheda`) e carica il contenuto di questa cartella nella root.
-   ```bash
-   git init && git add . && git commit -m "Scheda full body"
-   git branch -M main
-   git remote add origin git@github.com:<utente>/scheda.git
-   git push -u origin main
-   ```
-2. Su GitHub: **Settings → Pages → Build and deployment → Deploy from a branch**, scegli `main` e cartella `/ (root)`.
-3. Dopo un minuto la trovi su `https://<utente>.github.io/scheda/`.
+Sito statico, nessun build.
+
+1. Su [vercel.com](https://vercel.com) → **Add New → Project** → importa il repo `TheSimon9/work-out`.
+2. Framework preset: **Other**. Build command e output directory vuoti (la root è già il sito).
+3. **Deploy**. Ogni push su `main` ripubblica in automatico.
+
+`vercel.json` imposta `no-cache` su `index.html` e `sw.js`, così i telefoni vedono subito le nuove versioni.
 
 ## Usarla in palestra senza rete
 
@@ -20,7 +18,7 @@ Webapp statica della scheda di allenamento: 3 sedute a settimana, foto reali ani
 2. Aggiungila alla schermata Home: su iPhone da Safari → Condividi → *Aggiungi alla schermata Home*; su Android da Chrome → menu → *Installa app*.
 3. Da lì in poi si apre anche offline.
 
-Se modifichi i contenuti, cambia `CACHE = "scheda-v2"` in `sw.js` (es. `v3`) così i telefoni scaricano la versione nuova.
+Se modifichi i contenuti, cambia `CACHE = "scheda-v3"` in `sw.js` (es. `v4`) così i telefoni scaricano la versione nuova.
 
 ## Registro e backup
 
