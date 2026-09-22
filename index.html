@@ -182,6 +182,36 @@ footer a{color:inherit}
 .sets.c3{grid-template-columns:1fr 1fr 1fr}
 .sets.c2{grid-template-columns:1fr 1fr}
 
+
+/* muscoli */
+.mus{display:flex;gap:12px;align-items:center;background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:12px}
+.mus .body{width:112px;flex:none}
+.body .sil,.body .m{fill:#D3D7DE}
+.body .p{fill:var(--accent)}
+.body .s{fill:var(--accent);opacity:.36}
+.body text{font:600 6px var(--body);fill:#9AA0A8;text-anchor:middle}
+.mus h3{font:600 .75rem/1 var(--body);color:var(--accent);margin-bottom:7px}
+.mus p{font-size:.93rem;display:flex;align-items:flex-start;gap:7px;margin-bottom:4px}
+.mus i{width:10px;height:10px;border-radius:3px;background:var(--accent);flex:none;margin-top:5px}
+.mus .ms{color:var(--muted)}
+.mus .ms i{opacity:.36}
+.mus small{display:block;color:var(--muted);font-size:.8rem;margin-top:6px}
+
+/* passo passo */
+.steps{margin-top:12px}
+.steps summary{font:600 .78rem/1 var(--body);color:var(--accent);cursor:pointer}
+.steps summary:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.steps ol{margin:10px 0 0 18px;color:var(--muted);font-size:.92rem;display:grid;gap:7px}
+
+/* note */
+.note-l{font:600 .72rem/1 var(--body);color:var(--muted);display:block;margin:12px 0 6px}
+.log textarea{width:100%;font:400 .95rem/1.4 var(--body);padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);resize:vertical;display:block}
+.log textarea:focus{outline:none;border-color:var(--accent)}
+.qn{display:block;margin-top:6px;color:var(--muted);font-style:italic;font-size:.88rem}
+.hist li .qn{margin:2px 0 0}
+.hist li{flex-wrap:wrap}
+.hist li .qn{flex-basis:100%}
+
 [hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){.timer{transition:none}}
 </style>
@@ -207,41 +237,80 @@ footer a{color:inherit}
 <script>
 /* ---------- libreria esercizi ---------- */
 const EX = {
-  leg_press:{n:"Leg press", m:"Seduto con schienale, grande pedana davanti ai piedi. Può essere inclinata a 45° o orizzontale: l'esecuzione è la stessa.", h:"Piedi a metà pedana, larghi come le spalle. Scendi fino a 90° al ginocchio, spingi coi talloni.", w:"Mai ginocchia bloccate in alto. La zona lombare resta appoggiata."},
-  goblet:{n:"Goblet squat", m:"Un manubrio tenuto al petto con due mani.", h:"Piedi larghi come le spalle, manubrio stretto al petto. Scendi come per sederti, ginocchia in linea coi piedi.", w:"Talloni a terra e petto alto. Scendi solo finché la schiena resta dritta."},
-  chest:{n:"Chest press", m:"Seduto dritto, due maniglie all'altezza del petto.", h:"Scapole indietro, incollate allo schienale. Spingi avanti, torna in 2 secondi.", w:"Maniglie a metà sterno: se sono all'altezza delle spalle, alza il sedile."},
-  chest_db:{n:"Panca piana manubri", m:"Panca piana e due manubri.", h:"Scapole strette sulla panca. Spingi i manubri sopra il petto, scendi lento fino ai lati del petto.", w:"Le prime volte fatti passare i manubri, se sono pesanti."},
-  lat:{n:"Lat machine", m:"Seduto, cuscino sulle cosce, barra lunga appesa a un cavo sopra la testa.", h:"Presa larga. Tira la barra davanti al petto portando i gomiti verso le tasche.", w:"Mai dietro la nuca. Il busto non dondola."},
-  lat_under:{n:"Lat presa inversa", m:"La stessa lat machine, palmi rivolti verso di te.", h:"Presa larga come le spalle, palmi verso il viso. Tira la barra fino al petto.", w:"Niente dondolii, il busto resta quasi fermo."},
-  high_row:{n:"Rematore alto macchina", m:"Seduto, due maniglie in alto da tirare verso il basso e indietro.", h:"Petto contro il cuscino. Tira le maniglie verso le spalle, gomiti che scendono ai fianchi.", w:"Non staccarti dal cuscino per aiutarti."},
-  shoulder:{n:"Shoulder press", m:"Seduto, maniglie all'altezza delle spalle da spingere verso l'alto.", h:"Schiena appoggiata. Spingi sopra la testa, riscendi fino all'altezza del mento.", w:"Se inarchi la schiena per aiutarti, il peso è troppo."},
-  shoulder_db:{n:"Lento con manubri", m:"Panca con schienale verticale e due manubri.", h:"Schiena appoggiata, manubri all'altezza delle orecchie. Spingi in alto, scendi lento.", w:"Non inarcare la schiena."},
-  leg_ext:{n:"Leg extension", m:"Seduto, rullo imbottito davanti alle caviglie.", h:"Ginocchio allineato al perno della macchina. Distendi le gambe, scendi lento.", w:"Niente slanci: se il peso rimbalza in basso, è troppo."},
-  plank:{n:"Plank", bw:"sec", m:"A corpo libero, su un tappetino. La foto mostra anche come ti metti in posizione.", h:"Avambracci a terra sotto le spalle, corpo dritto dalla testa ai talloni. Stringi i glutei.", w:"Bacino né alto né cadente. Se 30 secondi sono troppi, parti da 15."},
-  side_plank:{n:"Plank laterale", bw:"sec", s:"3 × 20″ per lato", m:"A corpo libero, su un tappetino.", h:"Sul fianco, gomito sotto la spalla. Solleva il bacino e tieni il corpo in linea.", w:"Se è troppo, tieni le ginocchia piegate a terra."},
-  row_machine:{n:"Rematore alla macchina", m:"Seduto, petto contro un cuscino, maniglie davanti a te da tirare verso il busto.", h:"Petto incollato al cuscino. Tira i gomiti indietro vicino ai fianchi e stringi le scapole.", w:"Non staccare il petto dal cuscino per tirare di più."},
-  row_db:{n:"Rematore con manubrio", s:"3 × 10–12 per braccio", m:"Un manubrio e una panca piana.", h:"Mano e ginocchio sulla panca, schiena piatta. Tira il manubrio verso il fianco, gomito vicino al corpo.", w:"La schiena non ruota: si muove solo il braccio."},
-  pulley:{n:"Pulley basso", m:"Panca bassa, pedana per i piedi, cavo che parte dal basso.", h:"Ginocchia morbide, schiena dritta. Tira la maniglia all'ombelico stringendo le scapole.", w:"Il busto resta fermo: se ti butti indietro, il peso è troppo."},
-  leg_curl_seat:{n:"Leg curl seduto", m:"Seduto, rullo sotto le caviglie e un cuscino che blocca le cosce dall'alto.", h:"Blocca bene le cosce col cuscino. Porta i talloni sotto la seduta, torna in 2 secondi.", w:"La schiena resta appoggiata, non scivolare in avanti."},
-  leg_curl_stand:{n:"Leg curl in piedi", s:"3 × 10–12 per gamba", m:"In piedi, una gamba alla volta, rullo dietro la caviglia.", h:"Busto appoggiato al cuscino, porta il tallone verso il gluteo. Finite le ripetizioni, cambia gamba.", w:"Il bacino non ruota, la gamba d'appoggio resta morbida."},
-  leg_curl:{n:"Leg curl sdraiato", m:"Panca a pancia in giù, rullo dietro le caviglie.", h:"Ginocchia appena oltre il bordo. Porta i talloni verso i glutei, torna in 2 secondi.", w:"Il bacino resta incollato alla panca."},
-  pec:{n:"Pectoral machine", m:"Seduto, due bracci laterali da chiudere davanti al petto.", h:"Gomiti leggermente piegati e fermi. Chiudi come per abbracciare un albero.", w:"Non aprire troppo indietro: fermati quando senti tirare il petto."},
-  fly_db:{n:"Croci con manubri", m:"Panca piana e due manubri leggeri.", h:"Braccia sopra il petto, gomiti leggermente piegati. Apri ad arco verso i lati e richiudi.", w:"Non scendere oltre la linea delle spalle."},
-  glute_bridge:{n:"Glute bridge", bw:"rip", s:"3 × 15", m:"A terra su un tappetino, niente attrezzi.", h:"Sdraiato, ginocchia piegate, piedi vicini ai glutei. Spingi coi talloni e solleva il bacino fino alla linea spalle-ginocchia.", w:"In alto stringi i glutei per 2 secondi. Non inarcare la schiena."},
-  glute_bridge_1:{n:"Glute bridge una gamba", bw:"rip", s:"3 × 10 per gamba", m:"A terra su un tappetino. È la versione più dura: passaci quando 3 × 15 a due gambe è facile.", h:"Come il glute bridge, ma con una gamba distesa in aria. Spingi col tallone a terra.", w:"Il bacino resta dritto, non si inclina da un lato."},
-  abductor:{n:"Abductor machine", s:"3 × 15", m:"Seduto, cuscinetti all'esterno delle ginocchia.", h:"Apri le gambe spingendo verso l'esterno, chiudi lentamente.", w:"Busto fermo contro lo schienale, niente slanci."},
-  hip:{n:"Hip thrust", m:"Una panca, e più avanti un bilanciere sul bacino.", h:"Parte alta della schiena sulla panca, piedi a terra. Spingi coi talloni finché il bacino è in linea.", w:"In alto stringi i glutei per 1 secondo. Non inarcare la schiena."},
-  pushdown:{n:"Pushdown ai cavi", m:"Torre con cavo che scende dall'alto, barretta o corda.", h:"Gomiti incollati ai fianchi. Spingi in basso finché le braccia sono distese.", w:"Si muovono solo gli avambracci, le spalle stanno ferme."},
-  pushdown_rope:{n:"Pushdown con corda", m:"La stessa torre cavi, con la corda.", h:"Gomiti ai fianchi. Spingi in basso e alla fine apri leggermente la corda verso l'esterno.", w:"Le spalle restano ferme."},
-  deadbug:{n:"Dead bug", bw:"rip", m:"A corpo libero, sdraiato sulla schiena.", h:"Braccia al cielo, gambe a 90°. Distendi braccio e gamba opposti, torna, cambia lato.", w:"La zona lombare resta schiacciata a terra per tutto il tempo."},
-  chest_inc:{n:"Chest press inclinata", m:"Come la chest press, ma spingi in alto e in avanti.", h:"Scapole incollate, spingi in diagonale verso l'alto. Ritorno lento.", w:"Se in sala non c'è, usa la panca inclinata con manubri."},
-  chest_inc_db:{n:"Panca inclinata manubri", m:"Panca inclinata a 30–45° e due manubri.", h:"Spingi i manubri sopra il petto, scendi lento ai lati.", w:"Schiena e glutei restano sulla panca."},
-  lat_v:{n:"Lat presa stretta", m:"La stessa lat machine, con barra corta o maniglia a triangolo.", h:"Petto in fuori, tira fino al petto con i gomiti che scendono vicino al busto.", w:"In alto allunga bene le braccia, senza alzarti dal sedile."},
-  lateral:{n:"Alzate laterali", m:"Due manubri leggeri: parti da 4–6 kg.", h:"In piedi, braccia lungo i fianchi. Sollevale di lato fino all'altezza delle spalle.", w:"Gomiti appena piegati, niente slanci col busto."},
-  crunch:{n:"Crunch alla macchina", m:"Seduto, maniglie o cuscinetti sul petto, piedi bloccati.", h:"Arrotola il busto in avanti, costole verso il bacino. Espira mentre chiudi.", w:"Non tirare con le braccia: il movimento parte dall'addome."},
-  cable_crunch:{n:"Crunch ai cavi", m:"Torre cavi, corda agganciata in alto, in ginocchio.", h:"Corda ai lati della testa. Arrotola il busto verso il pavimento contraendo l'addome.", w:"Il bacino resta fermo: non sederti sui talloni."},
-  pallof:{n:"Pallof press", s:"3 × 10 per lato", m:"Cavo regolato all'altezza del petto, maniglia singola. Basta un metro di spazio.", h:"In piedi di fianco al cavo, maniglia al petto. Distendi le braccia davanti a te resistendo alla rotazione, poi torna.", w:"Il busto non deve girare verso il cavo: è proprio quello l'esercizio."},
-  farmer:{n:"Farmer walk", s:"3 × 30 m", m:"Due manubri pesanti, uno per mano. In foto dei maniglioni, il movimento è lo stesso.", h:"Stai dritto e cammina a passi corti e regolari.", w:"Spalle basse, addome contratto, non ondeggiare."},
+  leg_press:{n:"Leg press", m:"Seduto con schienale, grande pedana davanti ai piedi. Può essere inclinata a 45° o orizzontale: l'esecuzione è la stessa.", h:"Piedi a metà pedana, larghi come le spalle. Scendi fino a 90° al ginocchio, spingi coi talloni.", w:"Mai ginocchia bloccate in alto. La zona lombare resta appoggiata.", p:["quadriceps"], sx:["glutes","hamstrings"]},
+  goblet:{n:"Goblet squat", m:"Un manubrio tenuto al petto con due mani.", h:"Piedi larghi come le spalle, manubrio stretto al petto. Scendi come per sederti, ginocchia in linea coi piedi.", w:"Talloni a terra e petto alto. Scendi solo finché la schiena resta dritta.", p:["quadriceps"], sx:["glutes","hamstrings","abdominals"]},
+  chest:{n:"Chest press", m:"Seduto dritto, due maniglie all'altezza del petto.", h:"Scapole indietro, incollate allo schienale. Spingi avanti, torna in 2 secondi.", w:"Maniglie a metà sterno: se sono all'altezza delle spalle, alza il sedile.", p:["chest"], sx:["shoulders","triceps"]},
+  chest_db:{n:"Panca piana manubri", m:"Panca piana e due manubri.", h:"Scapole strette sulla panca. Spingi i manubri sopra il petto, scendi lento fino ai lati del petto.", w:"Le prime volte fatti passare i manubri, se sono pesanti.", p:["chest"], sx:["shoulders","triceps"]},
+  lat:{n:"Lat machine", m:"Seduto, cuscino sulle cosce, barra lunga appesa a un cavo sopra la testa.", h:"Presa larga. Tira la barra davanti al petto portando i gomiti verso le tasche.", w:"Mai dietro la nuca. Il busto non dondola.", p:["lats"], sx:["biceps","middle back","shoulders"]},
+  lat_under:{n:"Lat presa inversa", m:"La stessa lat machine, palmi rivolti verso di te.", h:"Presa larga come le spalle, palmi verso il viso. Tira la barra fino al petto.", w:"Niente dondolii, il busto resta quasi fermo.", p:["lats"], sx:["biceps","middle back"]},
+  high_row:{n:"Rematore alto macchina", m:"Seduto, due maniglie in alto da tirare verso il basso e indietro.", h:"Petto contro il cuscino. Tira le maniglie verso le spalle, gomiti che scendono ai fianchi.", w:"Non staccarti dal cuscino per aiutarti.", p:["middle back"], sx:["lats","biceps"]},
+  shoulder:{n:"Shoulder press", m:"Seduto, maniglie all'altezza delle spalle da spingere verso l'alto.", h:"Schiena appoggiata. Spingi sopra la testa, riscendi fino all'altezza del mento.", w:"Se inarchi la schiena per aiutarti, il peso è troppo.", p:["shoulders"], sx:["triceps"]},
+  shoulder_db:{n:"Lento con manubri", m:"Panca con schienale verticale e due manubri.", h:"Schiena appoggiata, manubri all'altezza delle orecchie. Spingi in alto, scendi lento.", w:"Non inarcare la schiena.", p:["shoulders"], sx:["triceps"]},
+  leg_ext:{n:"Leg extension", m:"Seduto, rullo imbottito davanti alle caviglie.", h:"Ginocchio allineato al perno della macchina. Distendi le gambe, scendi lento.", w:"Niente slanci: se il peso rimbalza in basso, è troppo.", p:["quadriceps"]},
+  plank:{n:"Plank", bw:"sec", m:"A corpo libero, su un tappetino. La foto mostra anche come ti metti in posizione.", h:"Avambracci a terra sotto le spalle, corpo dritto dalla testa ai talloni. Stringi i glutei.", w:"Bacino né alto né cadente. Se 30 secondi sono troppi, parti da 15.", p:["abdominals"], sx:["shoulders"]},
+  side_plank:{n:"Plank laterale", bw:"sec", s:"3 × 20″ per lato", m:"A corpo libero, su un tappetino.", h:"Sul fianco, gomito sotto la spalla. Solleva il bacino e tieni il corpo in linea.", w:"Se è troppo, tieni le ginocchia piegate a terra.", p:["abdominals"], sx:["shoulders"]},
+  row_machine:{n:"Rematore alla macchina", m:"Seduto, petto contro un cuscino, maniglie davanti a te da tirare verso il busto.", h:"Petto incollato al cuscino. Tira i gomiti indietro vicino ai fianchi e stringi le scapole.", w:"Non staccare il petto dal cuscino per tirare di più.", p:["lats"], sx:["biceps","middle back"]},
+  row_db:{n:"Rematore con manubrio", s:"3 × 10–12 per braccio", m:"Un manubrio e una panca piana.", h:"Mano e ginocchio sulla panca, schiena piatta. Tira il manubrio verso il fianco, gomito vicino al corpo.", w:"La schiena non ruota: si muove solo il braccio.", p:["middle back"], sx:["lats","biceps","shoulders"]},
+  pulley:{n:"Pulley basso", m:"Panca bassa, pedana per i piedi, cavo che parte dal basso.", h:"Ginocchia morbide, schiena dritta. Tira la maniglia all'ombelico stringendo le scapole.", w:"Il busto resta fermo: se ti butti indietro, il peso è troppo.", p:["middle back"], sx:["lats","biceps"]},
+  leg_curl_seat:{n:"Leg curl seduto", m:"Seduto, rullo sotto le caviglie e un cuscino che blocca le cosce dall'alto.", h:"Blocca bene le cosce col cuscino. Porta i talloni sotto la seduta, torna in 2 secondi.", w:"La schiena resta appoggiata, non scivolare in avanti.", p:["hamstrings"]},
+  leg_curl_stand:{n:"Leg curl in piedi", s:"3 × 10–12 per gamba", m:"In piedi, una gamba alla volta, rullo dietro la caviglia.", h:"Busto appoggiato al cuscino, porta il tallone verso il gluteo. Finite le ripetizioni, cambia gamba.", w:"Il bacino non ruota, la gamba d'appoggio resta morbida.", p:["hamstrings"]},
+  leg_curl:{n:"Leg curl sdraiato", m:"Panca a pancia in giù, rullo dietro le caviglie.", h:"Ginocchia appena oltre il bordo. Porta i talloni verso i glutei, torna in 2 secondi.", w:"Il bacino resta incollato alla panca.", p:["hamstrings"]},
+  pec:{n:"Pectoral machine", m:"Seduto, due bracci laterali da chiudere davanti al petto.", h:"Gomiti leggermente piegati e fermi. Chiudi come per abbracciare un albero.", w:"Non aprire troppo indietro: fermati quando senti tirare il petto.", p:["chest"]},
+  fly_db:{n:"Croci con manubri", m:"Panca piana e due manubri leggeri.", h:"Braccia sopra il petto, gomiti leggermente piegati. Apri ad arco verso i lati e richiudi.", w:"Non scendere oltre la linea delle spalle.", p:["chest"]},
+  glute_bridge:{n:"Glute bridge", bw:"rip", s:"3 × 15", m:"A terra su un tappetino, niente attrezzi.", h:"Sdraiato, ginocchia piegate, piedi vicini ai glutei. Spingi coi talloni e solleva il bacino fino alla linea spalle-ginocchia.", w:"In alto stringi i glutei per 2 secondi. Non inarcare la schiena.", p:["glutes"], sx:["hamstrings"]},
+  glute_bridge_1:{n:"Glute bridge una gamba", bw:"rip", s:"3 × 10 per gamba", m:"A terra su un tappetino. È la versione più dura: passaci quando 3 × 15 a due gambe è facile.", h:"Come il glute bridge, ma con una gamba distesa in aria. Spingi col tallone a terra.", w:"Il bacino resta dritto, non si inclina da un lato.", p:["glutes"], sx:["hamstrings"]},
+  abductor:{n:"Abductor machine", s:"3 × 15", m:"Seduto, cuscinetti all'esterno delle ginocchia.", h:"Apri le gambe spingendo verso l'esterno, chiudi lentamente.", w:"Busto fermo contro lo schienale, niente slanci.", p:["abductors"], sx:["glutes"]},
+  hip:{n:"Hip thrust", m:"Una panca, e più avanti un bilanciere sul bacino.", h:"Parte alta della schiena sulla panca, piedi a terra. Spingi coi talloni finché il bacino è in linea.", w:"In alto stringi i glutei per 1 secondo. Non inarcare la schiena.", p:["glutes"], sx:["hamstrings"]},
+  pushdown:{n:"Pushdown ai cavi", m:"Torre con cavo che scende dall'alto, barretta o corda.", h:"Gomiti incollati ai fianchi. Spingi in basso finché le braccia sono distese.", w:"Si muovono solo gli avambracci, le spalle stanno ferme.", p:["triceps"]},
+  pushdown_rope:{n:"Pushdown con corda", m:"La stessa torre cavi, con la corda.", h:"Gomiti ai fianchi. Spingi in basso e alla fine apri leggermente la corda verso l'esterno.", w:"Le spalle restano ferme.", p:["triceps"]},
+  deadbug:{n:"Dead bug", bw:"rip", m:"A corpo libero, sdraiato sulla schiena.", h:"Braccia al cielo, gambe a 90°. Distendi braccio e gamba opposti, torna, cambia lato.", w:"La zona lombare resta schiacciata a terra per tutto il tempo.", p:["abdominals"]},
+  chest_inc:{n:"Chest press inclinata", m:"Come la chest press, ma spingi in alto e in avanti.", h:"Scapole incollate, spingi in diagonale verso l'alto. Ritorno lento.", w:"Se in sala non c'è, usa la panca inclinata con manubri.", p:["chest"], sx:["shoulders","triceps"]},
+  chest_inc_db:{n:"Panca inclinata manubri", m:"Panca inclinata a 30–45° e due manubri.", h:"Spingi i manubri sopra il petto, scendi lento ai lati.", w:"Schiena e glutei restano sulla panca.", p:["chest"], sx:["shoulders","triceps"]},
+  lat_v:{n:"Lat presa stretta", m:"La stessa lat machine, con barra corta o maniglia a triangolo.", h:"Petto in fuori, tira fino al petto con i gomiti che scendono vicino al busto.", w:"In alto allunga bene le braccia, senza alzarti dal sedile.", p:["lats"], sx:["biceps","middle back","shoulders"]},
+  lateral:{n:"Alzate laterali", m:"Due manubri leggeri: parti da 4–6 kg.", h:"In piedi, braccia lungo i fianchi. Sollevale di lato fino all'altezza delle spalle.", w:"Gomiti appena piegati, niente slanci col busto.", p:["shoulders"]},
+  crunch:{n:"Crunch alla macchina", m:"Seduto, maniglie o cuscinetti sul petto, piedi bloccati.", h:"Arrotola il busto in avanti, costole verso il bacino. Espira mentre chiudi.", w:"Non tirare con le braccia: il movimento parte dall'addome.", p:["abdominals"]},
+  cable_crunch:{n:"Crunch ai cavi", m:"Torre cavi, corda agganciata in alto, in ginocchio.", h:"Corda ai lati della testa. Arrotola il busto verso il pavimento contraendo l'addome.", w:"Il bacino resta fermo: non sederti sui talloni.", p:["abdominals"]},
+  pallof:{n:"Pallof press", s:"3 × 10 per lato", m:"Cavo regolato all'altezza del petto, maniglia singola. Basta un metro di spazio.", h:"In piedi di fianco al cavo, maniglia al petto. Distendi le braccia davanti a te resistendo alla rotazione, poi torna.", w:"Il busto non deve girare verso il cavo: è proprio quello l'esercizio.", p:["abdominals"], sx:["shoulders","chest"]},
+  farmer:{n:"Farmer walk", s:"3 × 30 m", m:"Due manubri pesanti, uno per mano. In foto dei maniglioni, il movimento è lo stesso.", h:"Stai dritto e cammina a passi corti e regolari.", w:"Spalle basse, addome contratto, non ondeggiare.", p:["forearms"], sx:["traps","abdominals","lower back"]},
+};
+
+/* ---------- passo passo: istruzioni del Free Exercise DB, tradotte ---------- */
+const STEPS = {
+  leg_press:["Siediti sulla macchina e appoggia i piedi al centro della pedana, larghi come le spalle.","Sblocca le sicurezze e spingi la pedana fino a gambe distese, senza bloccare le ginocchia: busto e gambe formano un angolo di 90°. È la posizione di partenza.","Inspira e scendi lentamente finché coscia e gamba formano 90°.","Spingi soprattutto coi talloni, usando i quadricipiti, ed espira mentre risali.","A fine serie riaggancia le sicurezze prima di alzarti: non vuoi quella pedana addosso."],
+  goblet:["In piedi, tieni il manubrio stretto al petto con tutte e due le mani.","Scendi in accosciata tra le gambe, petto e testa alti, schiena dritta.","In basso fermati un istante e usa i gomiti per spingere le ginocchia verso l'esterno.","Risali alla posizione di partenza."],
+  chest:["Regola il sedile: le maniglie devono trovarsi tra la parte bassa e la metà del petto.","Petto e testa alti, scapole tirate indietro. È la posizione di partenza.","Spingi le maniglie in avanti distendendo i gomiti.","Dopo una breve pausa torna indietro fermandoti poco prima dei fermi: il muscolo resta in tensione fino a fine serie."],
+  chest_db:["Sdraiati sulla panca piana coi manubri appoggiati sulle cosce, palmi che si guardano.","Aiutandoti con le cosce portali uno alla volta all'altezza delle spalle, poi ruota i polsi coi palmi in avanti: braccio e avambraccio formano 90°.","Espira e spingi in alto col petto, distendi le braccia e stringi il petto per un secondo.","Scendi lentamente: la discesa deve durare circa il doppio della spinta."],
+  lat:["Siediti alla lat machine e regola il cuscino sulle cosce: serve a tenerti giù.","Impugna la barra coi palmi in avanti, mani più larghe delle spalle.","Braccia distese in alto, inclina il busto indietro di circa 30°, petto in fuori. È la posizione di partenza.","Espira e porta la barra alla parte alta del petto spingendo spalle e gomiti in basso e indietro. Il busto resta fermo, si muovono solo le braccia.","Stringi le scapole per un secondo, poi risali lentamente fino a braccia distese e dorsali in allungamento."],
+  lat_under:["Siediti alla lat machine e regola il cuscino sulle cosce.","Impugna la barra coi palmi rivolti verso di te, mani più strette delle spalle.","Braccia distese, busto inclinato indietro di circa 30°, petto in fuori.","Espira e tira la barra fino alla parte alta del petto tenendo i gomiti vicini al corpo.","Dopo un secondo di contrazione risali lentamente fino a braccia distese."],
+  high_row:["Regola il sedile in modo da arrivare appena alle maniglie sopra di te, e sistema il cuscino sulle ginocchia.","Impugna le maniglie coi palmi verso il basso. È la posizione di partenza.","Tira le maniglie verso il busto stringendo le scapole mentre pieghi i gomiti.","Fermati un istante in basso, poi torna su lentamente senza far toccare i pesi tra una ripetizione e l'altra."],
+  shoulder:["Regola il sedile: le maniglie devono partire all'altezza della parte alta delle spalle.","Petto e testa alti, presa coi palmi in avanti.","Spingi le maniglie verso l'alto distendendo i gomiti.","Breve pausa in alto, poi torna giù fermandoti poco sopra la partenza per tenere il muscolo in tensione."],
+  shoulder_db:["Seduto su una panca con schienale, appoggia i manubri in piedi sulle cosce.","Portali all'altezza delle spalle uno alla volta, poi ruota i polsi coi palmi in avanti.","Espira e spingi in alto finché i manubri quasi si toccano.","Dopo una breve pausa scendi lentamente inspirando."],
+  leg_ext:["Siediti con le gambe sotto il rullo, piedi in avanti, mani sulle maniglie laterali.","Regola il rullo in modo che appoggi appena sopra i piedi e che il ginocchio formi 90°: se l'angolo è più chiuso il ginocchio va oltre le punte e l'articolazione si carica inutilmente.","Espira e distendi le gambe al massimo tenendo fermo il resto del corpo. Un secondo di pausa in alto.","Scendi lentamente inspirando, senza superare i 90°."],
+  plank:["A pancia in giù, appoggia avambracci e punte dei piedi. I gomiti stanno esattamente sotto le spalle.","Tieni il corpo dritto e resta in posizione il più a lungo possibile. Per renderlo più difficile solleva un braccio o una gamba."],
+  side_plank:["Sul fianco, gomito sotto la spalla e avambraccio a terra, gambe distese una sopra l'altra.","Solleva il bacino finché testa, bacino e caviglie sono in linea.","Tieni la posizione respirando normalmente, poi cambia lato."],
+  row_machine:["Regola il sedile in modo che le maniglie siano all'altezza del petto.","Impugna le maniglie con presa neutra o coi palmi verso il basso.","Tira verso il busto stringendo le scapole mentre pieghi i gomiti.","Fermati un istante, poi torna lentamente senza far appoggiare i pesi."],
+  row_db:["Appoggia mano e ginocchio destro sulla panca, busto piegato in avanti fino a essere parallelo al pavimento, schiena piatta.","Con la mano sinistra prendi il manubrio, palmo rivolto verso il corpo.","Tira il manubrio verso il fianco col gomito vicino al corpo, espirando. Tira con la schiena, non con le braccia: il busto resta fermo.","Scendi controllato inspirando. Finite le ripetizioni, cambia lato."],
+  pulley:["Siediti al pulley coi piedi sulla pedana e le ginocchia leggermente piegate, mai bloccate.","Piegati in avanti mantenendo la schiena nella sua curva naturale e prendi la maniglia.","Con le braccia distese raddrizza il busto fino a 90° rispetto alle gambe, petto in fuori: senti i dorsali in allungamento.","Busto fermo, tira la maniglia all'addome fino a toccarlo, espirando e stringendo la schiena. Un secondo, poi torna lentamente."],
+  leg_curl_seat:["Regola la macchina e siediti con la schiena contro lo schienale.","Metti la parte bassa delle gambe sopra il rullo, poco sotto i polpacci, e blocca il cuscino sulle cosce appena sopra le ginocchia. Impugna le maniglie laterali.","Espira e porta il rullo più indietro possibile piegando le ginocchia. Il busto resta fermo, un secondo di contrazione.","Torna lentamente alla partenza inspirando."],
+  leg_curl_stand:["Regola la macchina, busto piegato in avanti di 30-45°, rullo dietro la gamba poco sotto il polpaccio.","Gamba distesa e mani sulle maniglie. È la posizione di partenza.","Espira e porta il tallone verso il gluteo più che puoi, senza staccare la coscia dal cuscino. Un secondo in contrazione.","Torna giù inspirando. Finite le ripetizioni, cambia gamba."],
+  leg_curl:["Sdraiati a pancia in giù col rullo dietro le gambe, poco sotto i polpacci. Meglio una macchina inclinata che piatta.","Busto appoggiato, gambe distese, mani sulle maniglie.","Espira e porta i talloni verso i glutei senza staccare le cosce dal cuscino. Un secondo in contrazione.","Torna giù lentamente inspirando."],
+  pec:["Siediti con la schiena piatta contro lo schienale.","Prendi le maniglie: le braccia devono stare parallele al pavimento, regola la macchina di conseguenza.","Chiudi lentamente stringendo il petto al centro, espira e tieni la contrazione un secondo.","Torna indietro lentamente inspirando, fino a sentire il petto in allungamento."],
+  fly_db:["Sdraiato sulla panca piana, porta i manubri sopra il petto coi palmi che si guardano, braccia quasi distese.","Gomiti leggermente piegati e fermi: apri le braccia ad arco verso i lati finché senti tirare il petto, inspirando.","Il movimento avviene solo alla spalla, le braccia non si piegano di più.","Richiudi con lo stesso arco stringendo il petto ed espirando."],
+  glute_bridge:["Sdraiato sulla schiena, braccia lungo i fianchi, ginocchia piegate e piedi larghi come le spalle.","Spingi soprattutto coi talloni e solleva il bacino tenendo la schiena dritta. Espira e tieni un secondo in alto.","Torna giù lentamente inspirando."],
+  glute_bridge_1:["Sdraiato a terra, piedi appoggiati e ginocchia piegate.","Solleva una gamba portando il ginocchio verso il petto. È la posizione di partenza.","Spingi col tallone della gamba a terra ed estendi l'anca sollevando i glutei.","Sali più in alto che puoi, fermati un istante e torna giù."],
+  abductor:["Siediti alla macchina e scegli un carico gestibile. Sistemate le gambe, impugna le maniglie: dalla vita in su resti fermo.","Spingi lentamente con le gambe verso l'esterno, espirando.","Senti la contrazione un secondo e torna alla partenza inspirando, sempre col busto fermo."],
+  hip:["Seduto a terra con una panca dietro la schiena e il bilanciere sopra le gambe. Un cuscinetto sul bilanciere toglie quasi tutto il fastidio.","Fai rotolare il bilanciere finché è sopra le anche e appoggia la parte alta della schiena alla panca.","Spingi coi piedi ed estendi le anche verso l'alto: il peso è sostenuto da scapole e piedi.","Sali il più possibile, poi torna giù controllato."],
+  pushdown:["Aggancia una barra dritta o angolata al cavo alto e impugnala coi palmi verso il basso, mani larghe come le spalle.","In piedi, busto dritto e appena inclinato in avanti, gomiti vicini al corpo e perpendicolari al pavimento.","Spingi in basso coi tricipiti fino a braccia distese, espirando. Si muovono solo gli avambracci.","Dopo un secondo risali lentamente inspirando."],
+  pushdown_rope:["Aggancia la corda al cavo alto e impugnala coi palmi che si guardano.","Busto dritto e appena inclinato in avanti, gomiti vicini al corpo.","Spingi in basso portando i due capi della corda ai lati delle cosce, fino a braccia distese. Espira, gomiti fermi.","Risali lentamente inspirando."],
+  deadbug:["Sdraiato sulla schiena, braccia tese verso il soffitto.","Porta piedi, ginocchia e anche a 90°.","Espira forte per abbassare le costole e schiacciare la schiena a terra, ruotando il bacino e stringendo i glutei: tieni questa posizione per tutto l'esercizio.","Distendi una gamba fino a portarla appena sopra il pavimento.","La zona lombare non si deve inarcare: se succede, fermati prima.","Riporta la gamba e alterna i lati."],
+  chest_inc:["Regola il sedile: le maniglie devono partire all'altezza della parte alta del petto.","Petto e testa alti, scapole indietro.","Spingi le maniglie in avanti e in alto distendendo i gomiti.","Breve pausa, poi torna fermandoti poco sopra la partenza."],
+  chest_inc_db:["Sdraiati sulla panca inclinata coi manubri sulle cosce, palmi che si guardano.","Portali all'altezza delle spalle uno alla volta, poi ruota i polsi coi palmi in avanti.","Espira e spingi in alto col petto, distendi le braccia e tieni un secondo.","Scendi lentamente: circa il doppio del tempo della spinta.","A fine serie riappoggia i manubri sulle cosce e poi a terra: è il modo più sicuro per mollarli."],
+  lat_v:["Siediti alla lat machine con la maniglia a triangolo agganciata in alto.","Regola il cuscino sulle cosce.","Impugna coi palmi che si guardano, petto in fuori e busto inclinato indietro di circa 30°: così i dorsali lavorano meglio.","Tira in basso coi dorsali stringendo le scapole, fino quasi a toccare il petto. Espira, busto fermo.","Dopo un secondo torna su lentamente inspirando."],
+  lateral:["In piedi, busto dritto, manubri lungo i fianchi coi palmi verso di te.","Senza slanci, sollevali di lato coi gomiti appena piegati e le mani leggermente inclinate in avanti, come se versassi dell'acqua.","Sali fino ad avere le braccia parallele al pavimento, espira e fermati un secondo.","Scendi lentamente inspirando."],
+  crunch:["Carico leggero. Siediti coi piedi sotto i cuscinetti e impugna le maniglie in alto, gomiti appoggiati sui cuscini.","Chiudi il busto in avanti, ed eventualmente solleva le gambe, espirando. Lento e controllato: lavora l'addome, gambe e piedi restano rilassati.","Dopo un secondo torna lentamente alla partenza inspirando."],
+  cable_crunch:["Inginocchiati sotto un cavo alto con la corda agganciata.","Abbassa la corda fino ad avere le mani ai lati della testa.","Piega leggermente le anche e lascia che il peso allunghi la zona lombare. È la posizione di partenza.","Anche ferme, chiudi il busto contraendo l'addome finché i gomiti scendono verso metà coscia. Espira e tieni un secondo.","Torna su lentamente: tensione costante sull'addome, e niente carichi così pesanti da far lavorare la schiena al posto suo."],
+  pallof:["Aggancia una maniglia singola al cavo, se si può all'altezza delle spalle.","Di fianco al cavo, prendi la maniglia con due mani e allontanati fino ad avere il cavo in tensione, circa a un braccio di distanza.","Piedi larghi come le anche, ginocchia morbide, maniglia al centro del petto.","Spingi la maniglia in avanti distendendo le braccia, addome contratto.","Tieni qualche secondo, torna al petto. A fine serie giri dall'altra parte."],
+  farmer:["Vanno bene due manubri pesanti, uno per mano.","Impugna e sollevali spingendo coi talloni, schiena dritta e testa alta.","Cammina a passi corti e veloci per la distanza prevista, senza trattenere il respiro."],
 };
 
 /* ---------- allenamenti: ogni slot ha un default e delle alternative ---------- */
@@ -296,6 +365,77 @@ function hero(kicker, title, sub, letter){
   return `<header class="hero"><div class="kicker">${kicker}</div><h1>${title}</h1><p>${sub}</p>${letter?`<div class="letter" aria-hidden="true">${letter}</div>`:""}</header>`;
 }
 
+/* ---------- muscoli coinvolti ---------- */
+const MUSC = {abdominals:"addome", abductors:"abduttori", adductors:"adduttori", biceps:"bicipiti", calves:"polpacci",
+  chest:"petto", forearms:"avambracci", glutes:"glutei", hamstrings:"femorali", lats:"dorsali", "lower back":"zona lombare",
+  "middle back":"centro della schiena", neck:"collo", quadriceps:"quadricipiti", shoulders:"spalle", traps:"trapezi", triceps:"tricipiti"};
+const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+const nameOf = l => l.map(m => MUSC[m] || m).join(", ");
+
+function bodySVG(p, s){
+  const cl = m => p.includes(m) ? ' class="p"' : (s.includes(m) ? ' class="s"' : ' class="m"');
+  const E = (x,y,rx,ry,m) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}"${m?cl(m):' class="sil"'}/>`;
+  const R = (x,y,w,h,r,m) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}"${m?cl(m):' class="sil"'}/>`;
+  const P = (d,m) => `<path d="${d}"${m?cl(m):' class="sil"'}/>`;
+  const base = o => [
+    E(o,13,6.6,7.6), R(o-3.4,19,6.8,12,2),
+    P(`M${o-10},30 Q${o-8.2},45 ${o-7.6},52 L${o-9.4},64 H${o+9.4} L${o+7.6},52 Q${o+8.2},45 ${o+10},30 Z`),
+    R(o-9.4,63,18.8,8,3),
+    E(o-16,72,2.6,3), E(o+16,72,2.6,3),
+    E(o-4.8,95,3.6,3.2), E(o+4.8,95,3.6,3.2),
+    R(o-6.6,96,3.6,31,1.8), R(o+3,96,3.6,31,1.8),
+    E(o-4.8,130,3.6,3), E(o+4.8,130,3.6,3),
+  ].join("");
+  const arms = (o,up) => [
+    E(o-13,45,3.9,8.5,up), E(o+13,45,3.9,8.5,up),
+    E(o-15,61.5,3.4,8.5,"forearms"), E(o+15,61.5,3.4,8.5,"forearms"),
+  ].join("");
+  const calves = o => E(o-4.8,105,3.8,8.5,"calves") + E(o+4.8,105,3.8,8.5,"calves");
+  const front = o => base(o) + [
+    P(`M${o-3.4},23 L${o-10},30.5 L${o-6.4},33.5 L${o-2.8},29.5 Z`,"traps"),
+    P(`M${o+3.4},23 L${o+10},30.5 L${o+6.4},33.5 L${o+2.8},29.5 Z`,"traps"),
+    arms(o,"biceps"),
+    E(o-11.5,34.5,5.8,6.2,"shoulders"), E(o+11.5,34.5,5.8,6.2,"shoulders"),
+    P(`M${o-8.6},32.5 H${o-0.9} V42 Q${o-4.8},46 ${o-8.6},42.5 Z`,"chest"),
+    P(`M${o+8.6},32.5 H${o+0.9} V42 Q${o+4.8},46 ${o+8.6},42.5 Z`,"chest"),
+    R(o-5.6,46,11.2,17,3,"abdominals"),
+    P(`M${o-8.6},70 H${o-1} V91 Q${o-4.8},94.5 ${o-8.2},91 Z`,"quadriceps"),
+    P(`M${o+8.6},70 H${o+1} V91 Q${o+4.8},94.5 ${o+8.2},91 Z`,"quadriceps"),
+    calves(o),
+  ].join("");
+  const back = o => base(o) + [
+    P(`M${o},23 L${o-9.5},30.5 L${o-5},44 H${o+5} L${o+9.5},30.5 Z`,"traps"),
+    arms(o,"triceps"),
+    E(o-11.5,34.5,5.8,6.2,"shoulders"), E(o+11.5,34.5,5.8,6.2,"shoulders"),
+    P(`M${o-9.8},37 L${o-10.2},50 L${o-7.4},58.5 L${o-4.8},57 L${o-4.8},40.5 Z`,"lats"),
+    P(`M${o+9.8},37 L${o+10.2},50 L${o+7.4},58.5 L${o+4.8},57 L${o+4.8},40.5 Z`,"lats"),
+    R(o-4.5,44.5,9,11,2,"middle back"),
+    R(o-5.5,56,11,7.5,2.5,"lower back"),
+    E(o-9,66,2.8,4.5,"abductors"), E(o+9,66,2.8,4.5,"abductors"),
+    E(o-4.6,69.5,4.8,5.2,"glutes"), E(o+4.6,69.5,4.8,5.2,"glutes"),
+    P(`M${o-8.6},75 H${o-1} V91 Q${o-4.8},94.5 ${o-8.2},91 Z`,"hamstrings"),
+    P(`M${o+8.6},75 H${o+1} V91 Q${o+4.8},94.5 ${o+8.2},91 Z`,"hamstrings"),
+    calves(o),
+  ].join("");
+  return `<svg class="body" viewBox="0 0 160 146" aria-hidden="true">${front(38)}${back(120)}` +
+    `<text x="38" y="143">davanti</text><text x="120" y="143">dietro</text></svg>`;
+}
+function musBlock(p, sx){
+  p = p || []; sx = sx || [];
+  if(!p.length) return "";
+  return `<div class="mus">${bodySVG(p, sx)}<div>
+    <h3>Dove lo devi sentire</h3>
+    <p><i></i><b>${cap(nameOf(p))}</b></p>
+    ${sx.length ? `<p class="ms"><i></i>Aiutano: ${nameOf(sx)}</p>` : ""}
+    <small>La fatica deve arrivare qui. Se la senti altrove, rileggi «Come si fa».</small>
+  </div></div>`;
+}
+function stepsBlock(k){
+  const st = STEPS[k];
+  if(!st) return "";
+  return `<details class="steps"><summary>Passo passo</summary><ol>${st.map(x => `<li>${esc(x)}</li>`).join("")}</ol></details>`;
+}
+
 /* ---------- registro ---------- */
 function lastEntry(k){
   const all = DB.logs[k] || [];
@@ -317,8 +457,9 @@ function logBlock(L, i, k){
   if(prev){
     const done = prev.sets.filter(x => x.r);
     const hit = done.length >= dose.sets && done.every(x => x.r >= dose.top);
-    hint = `<div class="last"><b>Ultima volta</b>, ${niceDate(prev.d)}: ${esc(setsText(prev, bw))}` +
-      (hit ? `<br><span class="up">${bw ? "Aumenta di qualche ripetizione o secondo" : "Oggi sali di uno step"}</span>` : "") + `</div>`;
+    hint = `<div class="last"><b>Ultima volta</b>, ${niceDate(prev.d)}: ${esc(setsText(prev, bw)) || "nessuna serie registrata"}` +
+      (hit ? `<br><span class="up">${bw ? "Aumenta di qualche ripetizione o secondo" : "Oggi sali di uno step"}</span>` : "") +
+      (prev.note ? `<i class="qn">«${esc(prev.note)}»</i>` : "") + `</div>`;
   } else {
     hint = bw ? `<div class="last">Prima volta: segna ${bw==="sec"?"quanti secondi tieni":"quante ripetizioni fai"} per ogni serie.</div>` : `<div class="last">Prima volta: trova il peso con cui arrivi a ${dose.low} ripetizioni faticose ma pulite.</div>`;
   }
@@ -328,11 +469,13 @@ function logBlock(L, i, k){
     return `<label for="r-${L}${i}-${s}">Serie ${s+1}</label>${kg}<input id="r-${L}${i}-${s}" type="number" inputmode="numeric" min="0" name="r${s}" aria-label="Serie ${s+1}, ${bw==="sec"?"secondi":"ripetizioni"}" placeholder="${old.r ?? (bw==="sec"?"sec":"rip")}" value="${cur.r ?? ""}">`;
   }).join("");
   const head = bw ? `<span></span><span class="h">${bw==="sec"?"Secondi":"Ripetizioni"}</span>` : `<span></span><span class="h">Kg</span><span class="h">Ripetizioni</span>`;
-  const hist = all.length ? `<details class="hist"><summary>Storico (${all.length})</summary><ul>${all.slice(-8).reverse().map(e => `<li><span>${niceDate(e.d)}</span><b>${esc(setsText(e,bw))}</b></li>`).join("")}</ul></details>` : "";
+  const hist = all.length ? `<details class="hist"><summary>Storico (${all.length})</summary><ul>${all.slice(-8).reverse().map(e => `<li><span>${niceDate(e.d)}</span><b>${esc(setsText(e,bw))}</b>${e.note ? `<i class="qn">«${esc(e.note)}»</i>` : ""}</li>`).join("")}</ul></details>` : "";
   return `<form class="log" data-k="${k}" data-bw="${bw||""}">
     <h3>Il tuo registro <small>${todayE ? "Salvato oggi" : "I valori grigi sono quelli dell'ultima volta"}</small></h3>
     ${hint}
     <div class="sets${bw?" bw":""}">${head}${rows}</div>
+    <label class="note-l" for="nt-${L}${i}">Note: dolori, sensazioni, regolazioni della macchina</label>
+    <textarea id="nt-${L}${i}" name="note" rows="2" placeholder="Es. fastidio al ginocchio destro nelle ultime 2 ripetizioni">${esc(base?.note || "")}</textarea>
     <button class="save" type="submit">${todayE ? "Aggiorna la sessione di oggi" : "Salva la sessione di oggi"}</button>
     ${hist}
   </form>`;
@@ -377,6 +520,7 @@ function cardioBlock(L){
       </div>
       <button type="button" class="go rec" data-rec="${ph.min*60}" data-name="Cardio">${playIcon}Avvia ${ph.min} minuti</button>
       <ol class="prog" aria-label="Progressione">${rows}</ol>
+      ${musBlock(["quadriceps","glutes"], tread ? ["calves","hamstrings"] : ["calves"])}
       <dl>
         <div><dt>Come si fa</dt><dd>${tread ? "Camminata a ritmo costante, niente corsa. Mani lontane dalle maniglie. Quando è facile alza prima la pendenza, poi la velocità. Ultimi 2 minuti con pendenza a 0, stessa velocità: è il defaticamento." : "Sella all'altezza dell'anca, gamba quasi distesa in basso. Pedalata regolare, 60–70 giri al minuto. Ultimi 2 minuti con resistenza al minimo: è il defaticamento."}</dd></div>
         <div><dt>Il ritmo giusto</dt><dd>Devi riuscire a parlare a frasi brevi, ma non a cantare. Se ansimi, abbassa ${tread?"la pendenza":"la resistenza"}. Se potresti fare una telefonata tranquillo, alzala.</dd></div>
@@ -384,10 +528,12 @@ function cardioBlock(L){
       </dl>
       <form class="log cardio" data-k="${lk}">
         <h3>Il tuo registro <small>${todayE ? "Salvato oggi" : "I valori grigi sono quelli dell'ultima volta"}</small></h3>
-        ${prev ? `<div class="last"><b>Ultima volta</b>, ${niceDate(prev.d)}: ${txt(prev)}</div>` : ""}
+        ${prev ? `<div class="last"><b>Ultima volta</b>, ${niceDate(prev.d)}: ${txt(prev)}${prev.note ? `<i class="qn">«${esc(prev.note)}»</i>` : ""}</div>` : ""}
         <div class="sets ${tread?"c3":"c2"}">${inputs}</div>
+        <label class="note-l" for="nt-${L}c">Note: come è andata, fiato, gambe</label>
+        <textarea id="nt-${L}c" name="note" rows="2" placeholder="Es. ultimi 5 minuti pesanti, fiato corto">${esc(todayE?.note || "")}</textarea>
         <button class="save" type="submit">${todayE ? "Aggiorna la sessione di oggi" : "Salva la sessione di oggi"}</button>
-        ${all.length ? `<details class="hist"><summary>Storico (${all.length})</summary><ul>${all.slice(-8).reverse().map(e => `<li><span>${niceDate(e.d)}</span><b>${txt(e)}</b></li>`).join("")}</ul></details>` : ""}
+        ${all.length ? `<details class="hist"><summary>Storico (${all.length})</summary><ul>${all.slice(-8).reverse().map(e => `<li><span>${niceDate(e.d)}</span><b>${txt(e)}</b>${e.note ? `<i class="qn">«${esc(e.note)}»</i>` : ""}</li>`).join("")}</ul></details>` : ""}
       </form>
     </div>
   </article>`;
@@ -442,11 +588,13 @@ function viewDay(L){
         <h2>${esc(e.n)}</h2>
         <div class="dose"><strong>${dose}</strong><button class="rec" type="button" data-rec="${sl.r}" data-name="${esc(e.n)}" aria-label="Avvia recupero di ${fmt(sl.r)} per ${esc(e.n)}">${clockIcon}rec ${fmt(sl.r)}</button></div>
         ${alts}
+        ${musBlock(e.p, e.sx)}
         <dl>
           <div><dt>Macchina</dt><dd>${esc(e.m)}</dd></div>
           <div><dt>Come si fa</dt><dd>${esc(e.h)}</dd></div>
           <div><dt class="warn">Attenzione</dt><dd>${esc(e.w)}</dd></div>
         </dl>
+        ${stepsBlock(k)}
         ${logBlock(L,i,k)}
       </div>
     </article>`;
@@ -536,7 +684,9 @@ app.addEventListener("submit", e => {
       const v = inp.value !== "" ? inp.value : (isNaN(+inp.placeholder) ? "" : inp.placeholder);
       if(v !== "") entry[inp.name] = +v;
     });
-    if(!entry.min){ f.querySelector("input").focus(); return; }
+    const cnote = f.querySelector("textarea").value.trim();
+    if(cnote) entry.note = cnote;
+    if(!entry.min && !entry.note){ f.querySelector("input").focus(); return; }
     const list = DB.logs[f.dataset.k] = DB.logs[f.dataset.k] || [];
     const idx = list.findIndex(x => x.d === today());
     if(idx >= 0) list[idx] = entry; else list.push(entry);
@@ -552,10 +702,12 @@ app.addEventListener("submit", e => {
     const reps = r.value !== "" ? +r.value : null;
     return bw ? {r:reps} : {kg, r:reps};
   });
-  if(!sets.some(x => x.r || x.kg)){ f.querySelector("input").focus(); return; }
+  const note = f.querySelector("textarea").value.trim();
+  if(!sets.some(x => x.r || x.kg) && !note){ f.querySelector("input").focus(); return; }
   const list = DB.logs[k] = DB.logs[k] || [];
   const idx = list.findIndex(x => x.d === today());
   const entry = {d:today(), sets};
+  if(note) entry.note = note;
   if(idx >= 0) list[idx] = entry; else list.push(entry);
   persist();
   const btn = f.querySelector(".save"); btn.textContent = "Salvato"; btn.classList.add("ok");

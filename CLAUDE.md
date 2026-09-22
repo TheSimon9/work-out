@@ -41,7 +41,8 @@ tools/mkanim.py       genera nuove animazioni (non va in cache)
 
 ### Dati (in cima allo script di index.html)
 
-- `EX` — libreria esercizi. Chiave = nome file in `anim/`. Campi: `n` nome, `m` come riconoscere la macchina, `h` esecuzione, `w` errore da evitare, `s` dose opzionale che sovrascrive quella dello slot, `bw` per esercizi senza carico (`"rip"` o `"sec"`).
+- `EX` — libreria esercizi. Chiave = nome file in `anim/`. Campi: `n` nome, `m` come riconoscere la macchina, `h` esecuzione, `w` errore da evitare, `s` dose opzionale che sovrascrive quella dello slot, `bw` per esercizi senza carico (`"rip"` o `"sec"`), `p` muscoli primari e `sx` secondari (codici inglesi del Free Exercise DB, tradotti da `MUSC`).
+- `STEPS` — istruzioni passo passo del Free Exercise DB tradotte in italiano, una voce per esercizio. Vanno nel `<details>` «Passo passo» della card.
 - `DAYS` — `A`, `B`, `C`, ognuno con `slots`: `{d: chiave default, alt: [chiavi alternative], s: "3 × 10–12", r: recupero in secondi}`.
 - `PHASES` — progressione del cardio.
 
@@ -51,13 +52,15 @@ tools/mkanim.py       genera nuove animazioni (non va in cache)
 {
   swaps: { "A:2": "lat_under", "B:cardio": "bike" },   // alternative scelte per slot
   logs: {
-    "leg_press": [{ d: "2026-09-22", sets: [{ kg: 40, r: 12 }, ...] }],   // per esercizio, non per slot
+    "leg_press": [{ d: "2026-09-22", sets: [{ kg: 40, r: 12 }, ...], note: "..." }],   // per esercizio, non per slot
     "plank":     [{ d: "...", sets: [{ r: 30 }] }],
     "cardio_treadmill": [{ d: "...", min: 15, inc: 5, kmh: 5.1 }],
     "cardio_bike":      [{ d: "...", min: 15, lvl: 8 }]
   }
 }
 ```
+
+`note` è opzionale (dolori, sensazioni, regolazioni della macchina) ed esiste anche sulle entry del cardio: serve a Christian per raccontare com'è andata, e finisce nel backup JSON. Una entry può avere solo la nota, senza serie.
 
 Il registro è per esercizio: la leg press di A e di C condividono lo storico. Una sola entry per giorno, un nuovo salvataggio la sovrascrive. La settimana del piano si calcola dalla prima data registrata (`planWeek()`). Esporta/Importa backup JSON in Regole. **Non rompere mai la compatibilità di questo formato**: se serve cambiarlo, scrivi una migrazione.
 
@@ -86,7 +89,8 @@ Lo stile gli piace molto: non stravolgerlo.
 - Colori: inchiostro `#1D2127`, testo secondario `#5F6672`, card `#F4F5F7`, bordi `#E5E7EB`, errore `#B42318`. Giorno A arancio `#E8590C` / `#FDEBDD`, B verde petrolio `#0E8F80` / `#DDF3F0`, C viola `#5B4FD6` / `#E8E6FB`. Ogni vista imposta `data-day` e i componenti usano `--accent` e `--accent-l`.
 - Font: Barlow Condensed 700 per titoli e numeri, Barlow 400/600 per il testo.
 - Mobile first, colonna max 560 px, barra di navigazione in basso, hero scuro con barra colorata a sinistra e lettera grande del giorno.
-- Card esercizio: animazione in alto con numero, nome, dose in grande col colore del giorno, pillola del recupero (avvia il timer), alternative, poi Macchina / Come si fa / Attenzione, poi il registro.
+- Card esercizio: animazione in alto con numero, nome, dose in grande col colore del giorno, pillola del recupero (avvia il timer), alternative, mappa muscolare, poi Macchina / Come si fa / Attenzione, il «Passo passo» richiudibile e infine il registro con le note.
+- Mappa muscolare: due silhouette (davanti e dietro) disegnate in SVG inline da `bodySVG()`, primari in `--accent` pieno, secondari allo stesso colore al 36%, resto del corpo grigio. Niente immagini: è tutto codice, quindi funziona offline e prende il colore del giorno.
 
 ## Come lavorare
 
