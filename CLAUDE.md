@@ -67,7 +67,7 @@ Il registro è per esercizio: la leg press di A e di C condividono lo storico. U
 ### Offline — regole che non si saltano
 
 1. Ogni file nuovo va aggiunto all'array `ASSETS` in `sw.js`.
-2. A ogni modifica di qualunque asset, incrementa `CACHE` in `sw.js` (ora `scheda-v3`).
+2. A ogni modifica di qualunque asset, incrementa `CACHE` in `sw.js` (ora `scheda-v5`).
 3. Niente risorse esterne a runtime (CDN, font remoti, API): tutto deve stare nel repo.
 4. Il timer di recupero usa `Date.now()` come riferimento, non il conteggio dei tick, così resta corretto se lo schermo si spegne.
 
