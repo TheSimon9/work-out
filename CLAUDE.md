@@ -19,7 +19,12 @@ Ex programmatore con 10 anni di esperienza: parlagli da collega, non spiegare le
 
 ### Ilenia
 
-Si allena **in casa, solo con gli elastici** Fokky (set da 5 tubi con maniglie, ancoraggio da porta e cavigliere), 2 sedute a settimana. Del suo livello di partenza non sappiamo ancora niente: il piano è tarato su una principiante sana, da rivedere quando Christian dà indicazioni.
+155 cm per 54 kg. Si allena **in casa, solo con gli elastici** Fokky (set da 5 tubi con maniglie, ancoraggio da porta e cavigliere), 2 sedute a settimana. Niente macchine, niente panca: tutto in piedi o su un tappetino.
+
+- È una principiante: **non dare per scontato nessun esercizio**. Se un movimento ha bisogno di essere spiegato, non va nel riscaldamento — lì ci stanno solo cose che chiunque sa già fare.
+- Bande di partenza leggere (quasi tutte gialle): con 54 kg si sale in fretta, e partire pesante le rovina la tecnica.
+- La prima riga della card per lei si chiama «Come si monta», non «Macchina».
+- Del suo storico di allenamento e di eventuali problemi articolari non sappiamo ancora niente.
 
 | Banda | Resistenza |
 |---|---|
@@ -44,7 +49,7 @@ I chili sono indicativi: con l'elastico la resistenza cresce man mano che lo all
 ### Il piano di Ilenia
 
 - **Due sedute**: lunedì A (spinta, gambe e glutei), giovedì B (trazione, femorali e glutei), almeno due giorni di riposo tra le due.
-- Ogni seduta: **6' di riscaldamento** (`WARM`), 6 esercizi, **5' di defaticamento** (`COOL`). Sono blocchi fissi in cima e in fondo alla vista del giorno, col timer.
+- Ogni seduta: **6' di riscaldamento** (`WARM`: cardio leggero e mobilità a corpo libero, mai elastici), 6 esercizi, **5' di defaticamento** (`COOL`: allungamenti). Sono blocchi fissi in cima e in fondo alla vista del giorno, col timer.
 - Fasi: settimane 1–2 adattamento (2 serie); dalla 3 serie piene. Range 12–15.
 - **Progressione a colori**: quando fa 15 ripetizioni in tutte le serie, la volta dopo passa alla banda successiva e riparte da 12. Mezzo passo = accorciare la presa sulla stessa banda.
 - Manca un rematore orizzontale: il Free Exercise DB non ha foto di un rematore con elastici, quindi la schiena la coprono aperture posteriori e pull apart. Se serve, va aggiunto senza animazione o con un'altra fonte.
@@ -101,7 +106,7 @@ Il registro è per esercizio: la leg press di A e di C condividono lo storico. U
 ### Offline — regole che non si saltano
 
 1. Ogni file nuovo va aggiunto all'array `ASSETS` in `sw.js`.
-2. A ogni modifica di qualunque asset, incrementa `CACHE` in `sw.js` (ora `scheda-v6`).
+2. A ogni modifica di qualunque asset, incrementa `CACHE` in `sw.js` (ora `scheda-v7`).
 3. Niente risorse esterne a runtime (CDN, font remoti, API): tutto deve stare nel repo.
 4. Il timer di recupero usa `Date.now()` come riferimento, non il conteggio dei tick, così resta corretto se lo schermo si spegne.
 
