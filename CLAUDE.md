@@ -4,7 +4,11 @@ Sei il personal trainer e lo sviluppatore di questa webapp. Hai due responsabili
 
 ## Chi la usa
 
-Christian, ex programmatore con 10 anni di esperienza: parlagli da collega, non spiegare le basi di git o JavaScript. In palestra invece è un neofita assoluto.
+L'app ha **due profili**, con dati e piani separati: Christian e Ilenia. Si cambia dal selettore in cima a Piano e Regole, e il profilo attivo resta salvato.
+
+### Christian
+
+Ex programmatore con 10 anni di esperienza: parlagli da collega, non spiegare le basi di git o JavaScript. In palestra invece è un neofita assoluto.
 
 - Scrivi sempre in italiano, risposte sintetiche e dirette. Quando qualcosa è complicato, spiegalo in due righe prima dei dettagli.
 - Punto di partenza: 104 kg, 178 cm, primo mese di palestra. Obiettivo: composizione corporea e abitudine costante.
@@ -12,6 +16,20 @@ Christian, ex programmatore con 10 anni di esperienza: parlagli da collega, non 
 - Le macchine gli mettono soggezione. Ogni esercizio deve dire come riconoscere l'attrezzo, come si esegue e l'errore da evitare.
 - Esercizi scartati da lui, da non riproporre come default: leg curl sdraiato, hip thrust col bilanciere, farmer walk (palestra piccola). Pulley basso solo come alternativa: non è sicuro che ci sia.
 - Registra i carichi anche su Hevy, ma il registro nell'app è quello che usa per sapere da che peso ripartire.
+
+### Ilenia
+
+Si allena **in casa, solo con gli elastici** Fokky (set da 5 tubi con maniglie, ancoraggio da porta e cavigliere), 2 sedute a settimana. Del suo livello di partenza non sappiamo ancora niente: il piano è tarato su una principiante sana, da rivedere quando Christian dà indicazioni.
+
+| Banda | Resistenza |
+|---|---|
+| Giallo | 2–7 kg (5–15 lbs) |
+| Rosso | 7–16 kg (15–35 lbs) |
+| Nero | 11–29 kg (25–65 lbs) |
+| Viola | 16–39 kg (35–85 lbs) |
+| Verde | 23–57 kg (50–125 lbs) |
+
+I chili sono indicativi: con l'elastico la resistenza cresce man mano che lo allunghi. Il «peso» che registra è **il colore della banda**, non i kg.
 
 ## Il piano di allenamento
 
@@ -22,6 +40,14 @@ Christian, ex programmatore con 10 anni di esperienza: parlagli da collega, non 
 - **Cardio dopo i pesi**: camminata in salita. Sett. 1–2: 15' al 5% a 5,1 km/h. Sett. 3–4: 20' al 7%. Sett. 5+: 20–25' all'8–10% a 5,3. Test della parola per l'intensità. Cyclette 60–70 rpm come alternativa.
 - **Settimana 7+: split per gruppi muscolari** (già concordato, non ancora implementato nell'app): lunedì petto/spalle/tricipiti, mercoledì gambe/glutei/addome (leg press 4 serie), venerdì schiena/bicipiti/core.
 - Checkpoint: BIA di partenza (fatta prima di allenarsi) e nuova BIA a fine settimana 6.
+
+### Il piano di Ilenia
+
+- **Due sedute**: lunedì A (spinta, gambe e glutei), giovedì B (trazione, femorali e glutei), almeno due giorni di riposo tra le due.
+- Ogni seduta: **6' di riscaldamento** (`WARM`), 6 esercizi, **5' di defaticamento** (`COOL`). Sono blocchi fissi in cima e in fondo alla vista del giorno, col timer.
+- Fasi: settimane 1–2 adattamento (2 serie); dalla 3 serie piene. Range 12–15.
+- **Progressione a colori**: quando fa 15 ripetizioni in tutte le serie, la volta dopo passa alla banda successiva e riparte da 12. Mezzo passo = accorciare la presa sulla stessa banda.
+- Manca un rematore orizzontale: il Free Exercise DB non ha foto di un rematore con elastici, quindi la schiena la coprono aperture posteriori e pull apart. Se serve, va aggiunto senza animazione o con un'altra fonte.
 
 Regole da trainer: niente esercizi ad alto impatto (salti, corsa) finché il peso è questo; macchine e cavi prima dei pesi liberi; nessuna indicazione alimentare con numeri precisi, per l'alimentazione rimanda a un nutrizionista.
 
@@ -43,10 +69,17 @@ tools/mkanim.py       genera nuove animazioni (non va in cache)
 
 - `EX` — libreria esercizi. Chiave = nome file in `anim/`. Campi: `n` nome, `m` come riconoscere la macchina, `h` esecuzione, `w` errore da evitare, `s` dose opzionale che sovrascrive quella dello slot, `bw` per esercizi senza carico (`"rip"` o `"sec"`), `p` muscoli primari e `sx` secondari (codici inglesi del Free Exercise DB, tradotti da `MUSC`).
 - `STEPS` — istruzioni passo passo del Free Exercise DB tradotte in italiano, una voce per esercizio. Vanno nel `<details>` «Passo passo» della card.
-- `DAYS` — `A`, `B`, `C`, ognuno con `slots`: `{d: chiave default, alt: [chiavi alternative], s: "3 × 10–12", r: recupero in secondi}`.
-- `PHASES` — progressione del cardio.
+- `DAYS_CH` / `DAYS_IL` — gli allenamenti dei due profili: ogni giorno ha `slots` `{d: chiave default, alt: [chiavi alternative], s: "3 × 10–12", r: recupero in secondi}`. `DAYS` è la variabile che punta a quelli del profilo attivo, riassegnata al cambio profilo.
+- `PROF` — i due profili: `key` (chiave localStorage), `days`, `wd` (giorno della settimana → lettera), `cardio` o `bands`, più i testi di hero, settimana e tip. `P` è il profilo attivo, `PID` il suo id.
+- `BANDS` — le 5 bande Fokky in ordine di resistenza: `k` chiave salvata nel registro, `n` nome, `kg`, `lbs`, `c` colore del pallino. `nextBand()` dà la successiva.
+- `WARM` / `COOL` — riscaldamento e defaticamento di Ilenia, renderizzati da `blockWC()`.
+- `PHASES` — progressione del cardio (solo Christian).
 
-### Stato su `localStorage`, chiave `scheda.v1`
+Esercizi con elastico: `band:true` fa comparire il menu dei colori al posto dei kg nel registro, `b0` è la banda consigliata la prima volta, `img` punta a un'animazione di un altro esercizio quando il movimento è lo stesso (es. `el_bridge` riusa `glute_bridge`).
+
+### Stato su `localStorage`: una chiave per profilo
+
+`scheda.v1` è di Christian (invariata: i suoi vecchi backup continuano a funzionare), `scheda.il.v1` di Ilenia, `scheda.profilo` tiene il profilo attivo. Stessa struttura per tutti e due:
 
 ```js
 {
@@ -55,19 +88,20 @@ tools/mkanim.py       genera nuove animazioni (non va in cache)
     "leg_press": [{ d: "2026-09-22", sets: [{ kg: 40, r: 12 }, ...], note: "..." }],   // per esercizio, non per slot
     "plank":     [{ d: "...", sets: [{ r: 30 }] }],
     "cardio_treadmill": [{ d: "...", min: 15, inc: 5, kmh: 5.1 }],
-    "cardio_bike":      [{ d: "...", min: 15, lvl: 8 }]
+    "cardio_bike":      [{ d: "...", min: 15, lvl: 8 }],
+    "el_squat":  [{ d: "...", sets: [{ b: "nero", r: 15 }, ...] }]   // elastici: colore invece dei kg
   }
 }
 ```
 
 `note` è opzionale (dolori, sensazioni, regolazioni della macchina) ed esiste anche sulle entry del cardio: serve a Christian per raccontare com'è andata, e finisce nel backup JSON. Una entry può avere solo la nota, senza serie.
 
-Il registro è per esercizio: la leg press di A e di C condividono lo storico. Una sola entry per giorno, un nuovo salvataggio la sovrascrive. La settimana del piano si calcola dalla prima data registrata (`planWeek()`). Esporta/Importa backup JSON in Regole. **Non rompere mai la compatibilità di questo formato**: se serve cambiarlo, scrivi una migrazione.
+Il registro è per esercizio: la leg press di A e di C condividono lo storico. Una sola entry per giorno, un nuovo salvataggio la sovrascrive. La settimana del piano si calcola dalla prima data registrata (`planWeek()`). Esporta/Importa backup JSON in Regole, sempre sul profilo attivo: il file si chiama `scheda-<profilo>-<data>.json` e contiene un campo `profilo`. Importando un backup dell'altro profilo l'app chiede conferma. **Non rompere mai la compatibilità di questo formato**: se serve cambiarlo, scrivi una migrazione.
 
 ### Offline — regole che non si saltano
 
 1. Ogni file nuovo va aggiunto all'array `ASSETS` in `sw.js`.
-2. A ogni modifica di qualunque asset, incrementa `CACHE` in `sw.js` (ora `scheda-v5`).
+2. A ogni modifica di qualunque asset, incrementa `CACHE` in `sw.js` (ora `scheda-v6`).
 3. Niente risorse esterne a runtime (CDN, font remoti, API): tutto deve stare nel repo.
 4. Il timer di recupero usa `Date.now()` come riferimento, non il conteggio dei tick, così resta corretto se lo schermo si spegne.
 
@@ -89,6 +123,8 @@ Lo stile gli piace molto: non stravolgerlo.
 - Colori: inchiostro `#1D2127`, testo secondario `#5F6672`, card `#F4F5F7`, bordi `#E5E7EB`, errore `#B42318`. Giorno A arancio `#E8590C` / `#FDEBDD`, B verde petrolio `#0E8F80` / `#DDF3F0`, C viola `#5B4FD6` / `#E8E6FB`. Ogni vista imposta `data-day` e i componenti usano `--accent` e `--accent-l`.
 - Font: Barlow Condensed 700 per titoli e numeri, Barlow 400/600 per il testo.
 - Mobile first, colonna max 560 px, barra di navigazione in basso, hero scuro con barra colorata a sinistra e lettera grande del giorno.
+- Selettore profilo: due bottoni pieni in cima a Piano e Regole. Il nome del profilo compare anche nel kicker dell'hero di ogni allenamento.
+- Riscaldamento e defaticamento (solo Ilenia): card grigia con lista numerata e il bottone che avvia il timer.
 - Card esercizio: animazione in alto con numero, nome, dose in grande col colore del giorno, pillola del recupero (avvia il timer), alternative, mappa muscolare, poi Macchina / Come si fa / Attenzione, il «Passo passo» richiudibile e infine il registro con le note.
 - Mappa muscolare: due silhouette (davanti e dietro) disegnate in SVG inline da `bodySVG()`, primari in `--accent` pieno, secondari allo stesso colore al 36%, resto del corpo grigio. Niente immagini: è tutto codice, quindi funziona offline e prende il colore del giorno.
 

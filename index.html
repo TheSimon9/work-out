@@ -183,6 +183,34 @@ footer a{color:inherit}
 .sets.c2{grid-template-columns:1fr 1fr}
 
 
+/* profilo */
+.who{display:flex;gap:6px;margin:0 0 2px}
+.who button{flex:1;border:1.5px solid var(--line);background:#fff;color:var(--muted);border-radius:12px;padding:11px 8px;font:600 .92rem/1 var(--body);cursor:pointer}
+.who button[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
+.who button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+
+/* bande elastiche */
+.bands{list-style:none;background:var(--card);border-radius:12px;overflow:hidden;margin-bottom:10px}
+.bands li{display:grid;grid-template-columns:16px 1fr auto;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid var(--line);font-size:.92rem}
+.bands li:first-child{border-top:0}
+.bands i{width:14px;height:14px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.bands b{font-weight:600}
+.bands span{color:var(--muted);font-size:.85rem}
+.sets select{width:100%;font:600 1rem/1.1 var(--body);padding:9px 8px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.sets select:focus{outline:none;border-color:var(--accent)}
+
+/* riscaldamento e defaticamento */
+.wu{background:var(--card);border-radius:16px;padding:14px 16px 16px;margin-bottom:16px}
+.wu h2{font:700 1.5rem/1.05 var(--display);display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.wu h2 span{font:600 .8rem/1 var(--body);color:var(--accent);white-space:nowrap}
+.wu ol{list-style:none;counter-reset:w;margin:8px 0 14px}
+.wu li{counter-increment:w;position:relative;padding:8px 0 8px 22px;border-top:1px solid var(--line);font-size:.93rem}
+.wu li:first-child{border-top:0}
+.wu li::before{content:counter(w) ".";position:absolute;left:0;color:var(--muted)}
+.wu li b{font-weight:600}
+.wu li span{color:var(--muted)}
+.wu .go{margin:0}
+
 /* muscoli */
 .mus{display:flex;gap:12px;align-items:center;background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:12px}
 .mus .body{width:112px;flex:none}
@@ -226,13 +254,7 @@ footer a{color:inherit}
   <div class="bar" id="tbar"></div>
 </div>
 
-<nav class="nav" id="nav" aria-label="Sezioni">
-  <a href="#piano" data-v="piano"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Piano</a>
-  <a href="#A" data-v="A" data-l="A"><b>A</b>Lunedì</a>
-  <a href="#B" data-v="B" data-l="B"><b>B</b>Mercoledì</a>
-  <a href="#C" data-v="C" data-l="C"><b>C</b>Venerdì</a>
-  <a href="#regole" data-v="regole"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>Regole</a>
-</nav>
+<nav class="nav" id="nav" aria-label="Sezioni"></nav>
 
 <script>
 /* ---------- libreria esercizi ---------- */
@@ -271,11 +293,35 @@ const EX = {
   crunch:{n:"Crunch alla macchina", m:"Seduto, maniglie o cuscinetti sul petto, piedi bloccati.", h:"Arrotola il busto in avanti, costole verso il bacino. Espira mentre chiudi.", w:"Non tirare con le braccia: il movimento parte dall'addome.", p:["abdominals"]},
   cable_crunch:{n:"Crunch ai cavi", m:"Torre cavi, corda agganciata in alto, in ginocchio.", h:"Corda ai lati della testa. Arrotola il busto verso il pavimento contraendo l'addome.", w:"Il bacino resta fermo: non sederti sui talloni.", p:["abdominals"]},
   pallof:{n:"Pallof press", s:"3 × 10 per lato", m:"Cavo regolato all'altezza del petto, maniglia singola. Basta un metro di spazio.", h:"In piedi di fianco al cavo, maniglia al petto. Distendi le braccia davanti a te resistendo alla rotazione, poi torna.", w:"Il busto non deve girare verso il cavo: è proprio quello l'esercizio.", p:["abdominals"], sx:["shoulders","chest"]},
+  el_squat:{n:"Squat con elastico", m:"In piedi sopra l'elastico: piedi al centro della banda, larghi come le spalle, un capo per mano.", h:"Maniglie all'altezza del viso, palmi in avanti. Scendi finché le cosce sono parallele a terra, risali spingendo coi talloni.", w:"Talloni sempre a terra e schiena dritta. Se la banda ti tira in avanti, accorcia la presa.", p:["quadriceps"], sx:["glutes","hamstrings","calves"], band:true, b0:"nero"},
+  el_chest:{n:"Croci con elastico", m:"Elastico ancorato dietro di te, all'altezza del petto: ancoraggio da porta o un palo solido. Tu dai le spalle all'ancoraggio.", h:"Braccia aperte a croce, gomiti appena piegati. Chiudi le mani davanti al petto con un movimento ad arco, poi torna piano.", w:"Il busto non si muove: se ti sbilanci in avanti, fai un passo indietro e riduci la tensione.", p:["chest"], sx:["shoulders","biceps"], band:true, b0:"rosso"},
+  el_shoulder:{n:"Lento avanti con elastico", m:"In piedi sopra l'elastico, un capo per mano, maniglie all'altezza delle spalle.", h:"Palmi in avanti, gomiti sotto le mani. Spingi in alto fino a braccia distese, scendi lentamente fino alle spalle.", w:"Non inarcare la schiena per aiutarti: se succede, banda più leggera.", p:["shoulders"], sx:["triceps"], band:true, b0:"rosso"},
+  el_lateral:{n:"Alzate laterali con elastico", m:"In piedi sopra l'elastico, maniglie ai fianchi, braccia distese.", h:"Solleva le braccia di lato fino all'altezza delle spalle, gomiti appena piegati. Scendi piano.", w:"Niente slanci col busto. Qui bastano poche ripetizioni fatte bene: parti dalla banda più leggera.", p:["shoulders"], sx:[], band:true, b0:"giallo"},
+  el_bridge:{n:"Ponte glutei con elastico", img:"glute_bridge", m:"A terra su un tappetino, elastico che passa sopra il bacino con le maniglie tenute ai lati, bloccate a terra dalle mani.", h:"Ginocchia piegate, piedi vicini ai glutei. Spingi coi talloni e solleva il bacino fino alla linea spalle-ginocchia.", w:"In alto stringi i glutei per 2 secondi. La spinta viene dai glutei, non dalla schiena.", p:["glutes"], sx:["hamstrings"], band:true, b0:"nero"},
+  el_hip_ext:{n:"Slancio indietro con elastico", s:"3 × 12–15 per gamba", m:"Elastico ancorato in basso (porta) e cavigliera attorno a una caviglia. Guardi verso l'ancoraggio e ti tieni a un appoggio.", h:"Petto alto, porta la gamba indietro il più possibile tenendo il ginocchio disteso, poi torna piano.", w:"Il movimento parte dall'anca: se inarchi la schiena stai andando troppo indietro.", p:["glutes"], sx:["hamstrings"], band:true, b0:"rosso"},
+  el_goodmorning:{n:"Good morning con elastico", m:"In piedi su un capo dell'elastico, l'altro passa dietro al collo appoggiato sulle spalle.", h:"Gambe quasi distese: manda il bacino indietro e scendi col busto, poi risali estendendo le anche fino a tornare dritta.", w:"La schiena resta piatta per tutto il movimento. Se si arrotonda, scendi meno.", p:["hamstrings"], sx:["glutes","lower back"], band:true, b0:"rosso"},
+  el_back_fly:{n:"Aperture posteriori con elastico", m:"Elastico ancorato davanti a te all'altezza del petto, un capo per mano, un passo indietro per mettere in tensione.", h:"Braccia distese davanti, parallele a terra. Aprile verso i lati e indietro stringendo le scapole, poi torna piano.", w:"Spalle basse, lontane dalle orecchie. Le braccia restano all'altezza del petto, non salgono.", p:["shoulders"], sx:["middle back","triceps"], band:true, b0:"rosso"},
+  el_pull_apart:{n:"Pull apart", m:"Solo l'elastico, tenuto con due mani davanti a te: niente ancoraggio.", h:"Braccia distese davanti al petto. Apri le mani verso i lati finché la banda tocca il petto, stringendo le scapole. Torna controllando.", w:"Gomiti distesi e spalle indietro. Vai piano: è un esercizio di postura, non di forza.", p:["shoulders"], sx:["middle back","traps"], band:true, b0:"giallo"},
+  el_skull:{n:"French press con elastico", m:"Elastico ancorato in basso dietro la tua testa, tu sdraiata a terra o su una panca con la banda in linea con la testa.", h:"Gomiti alti e fermi, braccia perpendicolari a terra. Distendi i gomiti, pausa in alto, torna piano.", w:"Si muovono solo gli avambracci: i gomiti restano dove sono.", p:["triceps"], sx:[], band:true, b0:"giallo"},
+  el_tri_oh:{n:"Tricipiti sopra la testa", m:"In piedi sopra l'elastico (o ancorato in basso), banda che passa dietro la schiena e maniglie dietro la testa.", h:"Gomiti alti e vicini alla testa. Distendi le braccia verso l'alto, poi torna piano dietro la testa.", w:"I gomiti non si aprono verso l'esterno e la schiena non si inarca.", p:["triceps"], sx:[], band:true, b0:"giallo"},
+  el_calf:{n:"Polpacci con elastico", s:"3 × 15–20", m:"In piedi con le punte dei piedi sopra l'elastico, maniglie all'altezza delle spalle.", h:"Sali sulle punte più in alto che puoi, stringi i polpacci un secondo e scendi lentamente.", w:"Movimento lento: la discesa conta più della salita.", p:["calves"], sx:[], band:true, b0:"viola"},
   farmer:{n:"Farmer walk", s:"3 × 30 m", m:"Due manubri pesanti, uno per mano. In foto dei maniglioni, il movimento è lo stesso.", h:"Stai dritto e cammina a passi corti e regolari.", w:"Spalle basse, addome contratto, non ondeggiare.", p:["forearms"], sx:["traps","abdominals","lower back"]},
 };
 
 /* ---------- passo passo: istruzioni del Free Exercise DB, tradotte ---------- */
 const STEPS = {
+  el_squat:["Dividi l'elastico in due parti uguali: prendi i due capi con le mani e mettiti al centro della banda con i piedi larghi come le spalle.","Le maniglie devono stare alla stessa altezza da entrambi i lati, palmi in avanti, mani vicino al viso. È la posizione di partenza.","Piega lentamente le ginocchia e scendi finché le cosce sono parallele al pavimento.","Spingi coi talloni per risalire alla posizione di partenza."],
+  el_chest:["Fissa l'elastico a un ancoraggio solido dietro di te.","Dando le spalle all'ancoraggio, prendi le maniglie e fai un passo avanti, quanto basta per mettere in tensione la banda.","Apri le braccia di lato, parallele al pavimento: busto e braccia formano una T. Gomiti appena piegati. È la posizione di partenza.","Tenendo le braccia distese, portale davanti al petto con un movimento ad arco, espirando e stringendo il petto. Tieni un secondo.","Torna lentamente alla partenza inspirando."],
+  el_shoulder:["In piedi sopra l'elastico, con la tensione che inizia già a braccia distese. Prendi le maniglie e portale all'altezza delle spalle.","Ruota i polsi coi palmi in avanti, gomiti piegati e in linea col busto. È la posizione di partenza.","Espira e spingi in alto fino a braccia completamente distese sopra la testa."],
+  el_lateral:["In piedi sopra l'elastico, maniglie appoggiate ai fianchi, presa poco più stretta delle spalle, braccia distese e schiena dritta.","Solleva le maniglie di lato espirando, fino appena sopra la linea delle spalle. Inclina leggermente la mano come se versassi dell'acqua e tieni le braccia distese, busto fermo. Un secondo di pausa in alto.","Riporta giù lentamente inspirando."],
+  el_bridge:["Sdraiata sulla schiena, ginocchia piegate e piedi larghi come le spalle, elastico sopra il bacino e maniglie bloccate a terra dalle mani.","Spingi coi talloni e solleva il bacino tenendo la schiena dritta. Espira e tieni un secondo in alto.","Torna giù lentamente inspirando."],
+  el_hip_ext:["Fissa un capo dell'elastico in basso e l'altro alla cavigliera, attorno a una caviglia.","Guarda verso il punto di ancoraggio e tieniti a un appoggio per stare stabile.","Testa e petto alti, porta la gamba indietro il più possibile tenendo il ginocchio disteso.","Riporta la gamba alla posizione di partenza."],
+  el_goodmorning:["In piedi su un capo dell'elastico, piedi poco distanti. Piegati per passare l'altro capo dietro al collo. È la posizione di partenza.","Tenendo le gambe quasi distese, estendi le anche fino a tornare in posizione quasi verticale.","Non arrotondare la schiena mentre torni giù."],
+  el_back_fly:["Passa l'elastico attorno a un ancoraggio solido davanti a te.","Prendi le maniglie e indietreggia finché la banda è in tensione.","Distendi le braccia davanti a te, parallele al pavimento e perpendicolari al busto, piedi larghi come le spalle. È la posizione di partenza.","Espirando, porta le braccia di lato e indietro restando distese e parallele al pavimento, fino ad averle aperte ai tuoi fianchi.","Dopo una pausa torna alla posizione iniziale inspirando."],
+  el_pull_apart:["Parti con le braccia distese davanti a te, elastico tenuto con tutte e due le mani.","Apri le mani verso i lati, come un movimento di apertura all'indietro.","Tieni i gomiti distesi mentre porti la banda verso il petto, e tieni le spalle indietro.","Fermati un istante a fine movimento e torna alla partenza controllando."],
+  el_skull:["Fissa la banda in basso dietro di te e sdraiati in modo che sia in linea con la tua testa.","Prendi la banda e alza i gomiti finché il braccio è perpendicolare al pavimento: col gomito piegato la banda sta sopra la testa. È la posizione di partenza.","Distendi il gomito tenendo il braccio fermo, pausa in alto, poi torna alla posizione di partenza."],
+  el_tri_oh:["Ancora la banda in basso: puoi anche semplicemente salirci sopra con i piedi.","Porta la banda dietro la testa, presa coi palmi in avanti e gomiti alti. È la posizione di partenza.","Distendi i gomiti per raddrizzare le braccia, tenendo la parte alta del braccio ferma.","Fermati un istante e torna alla posizione di partenza."],
+  el_calf:["Mettiti sopra l'elastico con le punte dei piedi, controllando che la banda sia della stessa lunghezza da entrambi i lati.","Tenendo le maniglie, portale all'altezza della testa come se dovessi fare un lento avanti: così la banda va in tensione. È la posizione di partenza.","Mani ferme vicino alle spalle, sali sulle punte espirando e stringi forte i polpacci in alto.","Dopo un secondo di contrazione torna giù lentamente."],
   leg_press:["Siediti sulla macchina e appoggia i piedi al centro della pedana, larghi come le spalle.","Sblocca le sicurezze e spingi la pedana fino a gambe distese, senza bloccare le ginocchia: busto e gambe formano un angolo di 90°. È la posizione di partenza.","Inspira e scendi lentamente finché coscia e gamba formano 90°.","Spingi soprattutto coi talloni, usando i quadricipiti, ed espira mentre risali.","A fine serie riaggancia le sicurezze prima di alzarti: non vuoi quella pedana addosso."],
   goblet:["In piedi, tieni il manubrio stretto al petto con tutte e due le mani.","Scendi in accosciata tra le gambe, petto e testa alti, schiena dritta.","In basso fermati un istante e usa i gomiti per spingere le ginocchia verso l'esterno.","Risali alla posizione di partenza."],
   chest:["Regola il sedile: le maniglie devono trovarsi tra la parte bassa e la metà del petto.","Petto e testa alti, scapole tirate indietro. È la posizione di partenza.","Spingi le maniglie in avanti distendendo i gomiti.","Dopo una breve pausa torna indietro fermandoti poco prima dei fermi: il muscolo resta in tensione fino a fine serie."],
@@ -313,8 +359,35 @@ const STEPS = {
   farmer:["Vanno bene due manubri pesanti, uno per mano.","Impugna e sollevali spingendo coi talloni, schiena dritta e testa alta.","Cammina a passi corti e veloci per la distanza prevista, senza trattenere il respiro."],
 };
 
+/* ---------- bande elastiche Fokky: la resistenza cresce col colore ---------- */
+const BANDS = [
+  {k:"giallo", n:"Giallo", kg:"2–7 kg",   lbs:"5–15 lbs",   c:"#E0A800"},
+  {k:"rosso",  n:"Rosso",  kg:"7–16 kg",  lbs:"15–35 lbs",  c:"#C0392B"},
+  {k:"nero",   n:"Nero",   kg:"11–29 kg", lbs:"25–65 lbs",  c:"#2B2F36"},
+  {k:"viola",  n:"Viola",  kg:"16–39 kg", lbs:"35–85 lbs",  c:"#6B4FBB"},
+  {k:"verde",  n:"Verde",  kg:"23–57 kg", lbs:"50–125 lbs", c:"#2E8B45"},
+];
+const bandOf = k => BANDS.find(b => b.k === k);
+const nextBand = k => { const i = BANDS.findIndex(b => b.k === k); return i >= 0 && i < BANDS.length-1 ? BANDS[i+1] : null; };
+
+/* ---------- riscaldamento e defaticamento con gli elastici ---------- */
+const WARM = {t:"Riscaldamento", min:6, sub:"Prima di iniziare, sempre", items:[
+  ["Marcia sul posto", "2 minuti, braccia che accompagnano"],
+  ["Circonduzioni delle braccia", "10 avanti e 10 indietro"],
+  ["Pull apart con la banda gialla", "15 lente"],
+  ["Rotazioni esterne con la banda gialla", "gomito al fianco, 10 per lato"],
+  ["Squat a corpo libero", "10"],
+  ["Ponte glutei a corpo libero", "10"]]};
+const COOL = {t:"Defaticamento", min:5, sub:"Alla fine, con calma", items:[
+  ["Petto", "avambraccio allo stipite della porta, ruota il busto — 30″ per lato"],
+  ["Dorsali", "mani su un piano, bacino indietro, testa tra le braccia — 30″"],
+  ["Femorali", "tallone avanti e punta in su, bacino indietro — 30″ per gamba"],
+  ["Quadricipite", "in piedi, tallone al gluteo, ginocchia vicine — 30″ per gamba"],
+  ["Glutei", "da seduta, caviglia sul ginocchio opposto, busto avanti — 30″ per lato"],
+  ["Polpaccio", "mani al muro, gamba dietro distesa, tallone a terra — 30″ per gamba"]]};
+
 /* ---------- allenamenti: ogni slot ha un default e delle alternative ---------- */
-const DAYS = {
+const DAYS_CH = {
   A:{day:"Lunedì", sub:"Spinta, quadricipiti e spalle", slots:[
     {d:"leg_press", alt:["goblet"], s:"3 × 10–12", r:120},
     {d:"chest", alt:["chest_db"], s:"3 × 10–12", r:90},
@@ -338,12 +411,55 @@ const DAYS = {
     {d:"pallof", alt:["side_plank","farmer"], s:"3 × 10 per lato", r:60}]},
 };
 
-/* ---------- stato salvato sul telefono ---------- */
-const KEY = "scheda.v1";
-let DB;
-try { DB = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ DB = {}; }
-DB.swaps = DB.swaps || {}; DB.logs = DB.logs || {};
+/* ---------- Ilenia: due sedute a settimana, tutto con gli elastici ---------- */
+const DAYS_IL = {
+  A:{day:"Lunedì", sub:"Spinta, gambe e glutei", slots:[
+    {d:"el_squat", alt:[], s:"3 × 12–15", r:90},
+    {d:"el_chest", alt:[], s:"3 × 12–15", r:60},
+    {d:"el_shoulder", alt:["el_lateral"], s:"3 × 12–15", r:60},
+    {d:"el_bridge", alt:["el_hip_ext"], s:"3 × 12–15", r:60},
+    {d:"el_skull", alt:["el_tri_oh"], s:"2 × 12–15", r:60},
+    {d:"plank", alt:["side_plank"], s:"3 × 30″", r:45}]},
+  B:{day:"Giovedì", sub:"Trazione, femorali e glutei", slots:[
+    {d:"el_goodmorning", alt:[], s:"3 × 12–15", r:90},
+    {d:"el_back_fly", alt:["el_pull_apart"], s:"3 × 12–15", r:60},
+    {d:"el_pull_apart", alt:[], s:"2 × 15", r:45},
+    {d:"el_hip_ext", alt:["el_bridge"], s:"3 × 12–15 per gamba", r:60},
+    {d:"el_calf", alt:[], s:"3 × 15–20", r:45},
+    {d:"deadbug", alt:["plank"], s:"3 × 8 per lato", r:45}]},
+};
+
+/* ---------- i due profili: dati separati, nessuno vede quelli dell'altra ---------- */
+const PROF = {
+  christian:{n:"Christian", key:"scheda.v1", days:DAYS_CH, cardio:true, wd:{1:"A",3:"B",5:"C"},
+    heroP:["Piano di 6 settimane","Full body A·B·C","Tre allenamenti diversi, macchine e cavi, circa 65–75 minuti."],
+    weekNote:"Giorni spostabili, purché tra una seduta e l'altra ci sia almeno un giorno di riposo. Sempre in ordine A, B, C.",
+    dayNote:"esercizi, circa 40 minuti di pesi più cardio.",
+    tip:"Tocca il tempo di recupero dopo ogni serie. Se una macchina è occupata o non c'è, scegli un'alternativa: la scelta resta salvata. Il cardio è in fondo alla pagina."},
+  ilenia:{n:"Ilenia", key:"scheda.il.v1", days:DAYS_IL, bands:true, wd:{1:"A",4:"B"},
+    heroP:["Piano con gli elastici","Due sedute a settimana","Tutto il corpo con le bande Fokky, circa 40 minuti in casa."],
+    weekNote:"Giorni spostabili, purché tra le due sedute ci siano almeno due giorni di riposo.",
+    dayNote:"esercizi, più riscaldamento e defaticamento.",
+    tip:"Tocca il tempo di recupero dopo ogni serie. Segna sempre il colore della banda: per te è il peso. Riscaldamento qui sopra, defaticamento in fondo."},
+};
+
+/* ---------- stato salvato sul telefono: una chiave per profilo ---------- */
+const PKEY = "scheda.profilo";
+let PID = "christian";
+try { const v = localStorage.getItem(PKEY); if(v && PROF[v]) PID = v; } catch(e){}
+let P = PROF[PID], KEY = P.key, DAYS = P.days, DB;
+function loadDB(){
+  try { DB = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ DB = {}; }
+  DB.swaps = DB.swaps || {}; DB.logs = DB.logs || {};
+}
+loadDB();
 const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch(e){} };
+function setProfile(id){
+  if(!PROF[id] || id === PID) return;
+  PID = id; P = PROF[id]; KEY = P.key; DAYS = P.days; loadDB();
+  try { localStorage.setItem(PKEY, PID); } catch(e){}
+  stop(); history.replaceState(null, "", "#piano"); renderNav(); render(false);
+}
 
 const current = (L,i) => { const sl = DAYS[L].slots[i], k = DB.swaps[`${L}:${i}`]; return (k && (k===sl.d || sl.alt.includes(k))) ? k : sl.d; };
 const doseOf = (L,i,k) => EX[k].s || DAYS[L].slots[i].s;
@@ -442,35 +558,47 @@ function lastEntry(k){
   const past = all.filter(e => e.d !== today());
   return {prev: past[past.length-1], todayE: all.find(e => e.d === today()), all};
 }
-function setsText(e, bw){
+function setsText(e, bw, band){
   if(!e) return "";
   const done = e.sets.filter(x => x.r || x.kg);
   if(bw) return done.map(x => x.r).join(" · ") + (bw==="sec" ? " sec" : " rip");
+  if(band){
+    const bs = done.map(x => x.b ? bandOf(x.b).n.toLowerCase() : "–"), reps = done.map(x => x.r ?? "–");
+    return bs.every(v => v === bs[0]) ? `${bs[0]} × ${reps.join(" · ")}` : bs.map((b, i) => `${b} × ${reps[i]}`).join(" · ");
+  }
   const kgs = done.map(x => x.kg ?? "–"), reps = done.map(x => x.r ?? "–");
   return kgs.every(v => v === kgs[0]) ? `${kgs[0]} kg × ${reps.join(" · ")}` : `${kgs.join(" · ")} kg × ${reps.join(" · ")}`;
 }
 function logBlock(L, i, k){
-  const ex = EX[k], bw = ex.bw, dose = parseDose(doseOf(L,i,k));
+  const ex = EX[k], bw = ex.bw, band = ex.band, dose = parseDose(doseOf(L,i,k));
   const {prev, todayE, all} = lastEntry(k);
   const base = todayE || null;
   let hint = "";
   if(prev){
     const done = prev.sets.filter(x => x.r);
     const hit = done.length >= dose.sets && done.every(x => x.r >= dose.top);
-    hint = `<div class="last"><b>Ultima volta</b>, ${niceDate(prev.d)}: ${esc(setsText(prev, bw)) || "nessuna serie registrata"}` +
-      (hit ? `<br><span class="up">${bw ? "Aumenta di qualche ripetizione o secondo" : "Oggi sali di uno step"}</span>` : "") +
+    const nb = band ? nextBand(done[done.length-1]?.b) : null;
+    const up = bw ? "Aumenta di qualche ripetizione o secondo"
+      : band ? (nb ? `Oggi prova la banda ${nb.n.toLowerCase()}` : "Banda più forte che hai: rallenta il ritorno e tieni 2 secondi in contrazione")
+      : "Oggi sali di uno step";
+    hint = `<div class="last"><b>Ultima volta</b>, ${niceDate(prev.d)}: ${esc(setsText(prev, bw, band)) || "nessuna serie registrata"}` +
+      (hit ? `<br><span class="up">${up}</span>` : "") +
       (prev.note ? `<i class="qn">«${esc(prev.note)}»</i>` : "") + `</div>`;
   } else {
-    hint = bw ? `<div class="last">Prima volta: segna ${bw==="sec"?"quanti secondi tieni":"quante ripetizioni fai"} per ogni serie.</div>` : `<div class="last">Prima volta: trova il peso con cui arrivi a ${dose.low} ripetizioni faticose ma pulite.</div>`;
+    hint = bw ? `<div class="last">Prima volta: segna ${bw==="sec"?"quanti secondi tieni":"quante ripetizioni fai"} per ogni serie.</div>`
+      : band ? `<div class="last">Prima volta: parti dalla banda <b>${bandOf(ex.b0).n.toLowerCase()}</b> e arriva a ${dose.low} ripetizioni faticose ma pulite. Se è troppo facile o troppo dura, cambia colore e segna quello che hai usato.</div>`
+      : `<div class="last">Prima volta: trova il peso con cui arrivi a ${dose.low} ripetizioni faticose ma pulite.</div>`;
   }
   const rows = Array.from({length: dose.sets}, (_, s) => {
     const cur = base?.sets[s] || {}, old = prev?.sets[s] || {};
-    const kg = bw ? "" : `<input type="number" inputmode="decimal" step="0.5" min="0" name="kg${s}" aria-label="Serie ${s+1}, chili" placeholder="${old.kg ?? "kg"}" value="${cur.kg ?? ""}">`;
-    return `<label for="r-${L}${i}-${s}">Serie ${s+1}</label>${kg}<input id="r-${L}${i}-${s}" type="number" inputmode="numeric" min="0" name="r${s}" aria-label="Serie ${s+1}, ${bw==="sec"?"secondi":"ripetizioni"}" placeholder="${old.r ?? (bw==="sec"?"sec":"rip")}" value="${cur.r ?? ""}">`;
+    const load = bw ? ""
+      : band ? `<select name="b${s}" aria-label="Serie ${s+1}, banda">${BANDS.map(b => `<option value="${b.k}"${(cur.b ?? old.b ?? ex.b0) === b.k ? " selected" : ""}>${b.n}</option>`).join("")}</select>`
+      : `<input type="number" inputmode="decimal" step="0.5" min="0" name="kg${s}" aria-label="Serie ${s+1}, chili" placeholder="${old.kg ?? "kg"}" value="${cur.kg ?? ""}">`;
+    return `<label for="r-${L}${i}-${s}">Serie ${s+1}</label>${load}<input id="r-${L}${i}-${s}" type="number" inputmode="numeric" min="0" name="r${s}" aria-label="Serie ${s+1}, ${bw==="sec"?"secondi":"ripetizioni"}" placeholder="${old.r ?? (bw==="sec"?"sec":"rip")}" value="${cur.r ?? ""}">`;
   }).join("");
-  const head = bw ? `<span></span><span class="h">${bw==="sec"?"Secondi":"Ripetizioni"}</span>` : `<span></span><span class="h">Kg</span><span class="h">Ripetizioni</span>`;
-  const hist = all.length ? `<details class="hist"><summary>Storico (${all.length})</summary><ul>${all.slice(-8).reverse().map(e => `<li><span>${niceDate(e.d)}</span><b>${esc(setsText(e,bw))}</b>${e.note ? `<i class="qn">«${esc(e.note)}»</i>` : ""}</li>`).join("")}</ul></details>` : "";
-  return `<form class="log" data-k="${k}" data-bw="${bw||""}">
+  const head = bw ? `<span></span><span class="h">${bw==="sec"?"Secondi":"Ripetizioni"}</span>` : `<span></span><span class="h">${band ? "Banda" : "Kg"}</span><span class="h">Ripetizioni</span>`;
+  const hist = all.length ? `<details class="hist"><summary>Storico (${all.length})</summary><ul>${all.slice(-8).reverse().map(e => `<li><span>${niceDate(e.d)}</span><b>${esc(setsText(e,bw,band))}</b>${e.note ? `<i class="qn">«${esc(e.note)}»</i>` : ""}</li>`).join("")}</ul></details>` : "";
+  return `<form class="log" data-k="${k}" data-bw="${bw||""}" data-band="${band?"1":""}">
     <h3>Il tuo registro <small>${todayE ? "Salvato oggi" : "I valori grigi sono quelli dell'ultima volta"}</small></h3>
     ${hint}
     <div class="sets${bw?" bw":""}">${head}${rows}</div>
@@ -540,21 +668,66 @@ function cardioBlock(L){
 }
 
 /* ---------- viste ---------- */
+const WD = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"];
+const whoSwitch = () => `<div class="who" role="group" aria-label="Profilo">${Object.entries(PROF).map(([id,pr]) =>
+  `<button type="button" data-prof="${id}" aria-pressed="${id===PID}">${pr.n}</button>`).join("")}</div>`;
+const weekGrid = () => [1,2,3,4,5,6,0].map(i => { const l = P.wd[i];
+  return `<div class="day">${l?`<a class="dot" data-l="${l}" href="#${l}" aria-label="Allenamento ${l}, ${WD[i]}">${l}</a>`:`<span class="dot">–</span>`}${WD[i]}</div>`; }).join("");
+const bandList = () => `<ul class="bands">${BANDS.map(b => `<li><i style="background:${b.c}"></i><b>${b.n}</b><span>${b.kg} · ${b.lbs}</span></li>`).join("")}</ul>`;
+function blockWC(w){
+  return `<section class="wu">
+    <h2>${w.t} <span>${w.min} minuti</span></h2>
+    <ol>${w.items.map(([a,b]) => `<li><b>${a}</b> <span>${b}</span></li>`).join("")}</ol>
+    <button type="button" class="go rec" data-rec="${w.min*60}" data-name="${w.t}">${playIcon}Avvia ${w.min} minuti</button>
+  </section>`;
+}
+function dataBlock(){
+  const n = Object.values(DB.logs).reduce((a,l) => a + l.length, 0);
+  return `<h2 class="section">I tuoi dati</h2>
+    <p class="note" style="margin:0 0 10px">Registro e scelte di ${P.n} restano salvati su questo telefono (${n} ${n===1?"sessione registrata":"sessioni registrate"}), separati da quelli dell'altro profilo. Fai un backup ogni tanto, soprattutto prima di cambiare telefono o cancellare i dati del browser.</p>
+    <div class="databtns">
+      <button type="button" class="databtn" id="exp">Esporta backup</button>
+      <label class="databtn" for="imp">Importa backup</label>
+    </div>
+    <input type="file" id="imp" accept="application/json" hidden>`;
+}
+function pianoIl(){
+  return `<h2 class="section">Ogni seduta</h2>
+    <div class="blocks">
+      <div class="block"><b>6'</b><span>Riscaldo</span><small>Sempre, prima di iniziare</small></div>
+      <div class="block"><b class="hot">30'</b><span>Elastici</span><small>6 esercizi</small></div>
+      <div class="block"><b>5'</b><span>Defatica</span><small>Allungamenti</small></div>
+    </div>
+    <h2 class="section">Le bande</h2>
+    ${bandList()}
+    <p class="note">La resistenza cresce col colore. I chili sono indicativi: con l'elastico dipendono da quanto lo allunghi, non sono fissi come un manubrio.</p>
+
+    <h2 class="section">Le fasi</h2>
+    <div class="phase"><header><h3>Settimane 1–2</h3><em>Adattamento</em></header><p>2 serie per esercizio: la terza riga del registro lasciala vuota. Banda con cui arrivi a 15 ripetizioni senza fatica vera.</p></div>
+    <div class="phase hot"><header><h3>Dalla settimana 3</h3><em>Costruzione</em></header><p>Serie piene come da scheda, con la banda che ti fa arrivare a 12 ripetizioni faticose ma pulite.</p></div>
+    <div class="dark"><h3>Come si sale di livello</h3><p>Quando fai 15 ripetizioni in tutte le serie, la volta dopo passi al colore successivo e riparti da 12. Il registro te lo segnala da solo. Se il salto di colore è troppo, accorcia la presa sulla banda che hai già: è come un mezzo passo.</p></div>`;
+}
 function viewPiano(){
-  const week = [["Lun","A"],["Mar",""],["Mer","B"],["Gio",""],["Ven","C"],["Sab",""],["Dom",""]]
-    .map(([d,l]) => `<div class="day">${l?`<a class="dot" data-l="${l}" href="#${l}" aria-label="Allenamento ${l}, ${d}">${l}</a>`:`<span class="dot">–</span>`}${d}</div>`).join("");
   const sums = Object.entries(DAYS).map(([L,d]) => `
     <a class="sum" data-day="${L}" href="#${L}">
       <header><span class="badge">${L}</span><div><h3>${d.day}</h3><p>${d.sub}</p></div></header>
       <ol>${d.slots.map((sl,i) => { const k = current(L,i); return `<li><span>${esc(EX[k].n)}</span><b>${doseOf(L,i,k)}</b></li>`; }).join("")}</ol>
     </a>`).join("");
-  return `<div data-day="A">${hero("Piano di 6 settimane","Full body A·B·C","Tre allenamenti diversi, macchine e cavi, circa 65–75 minuti.")}
+  return `<div data-day="A">${hero(P.heroP[0], P.heroP[1], P.heroP[2])}
   <main>
+    ${whoSwitch()}
     <h2 class="section">La settimana</h2>
-    <div class="week">${week}</div>
-    <p class="note">Giorni spostabili, purché tra una seduta e l'altra ci sia almeno un giorno di riposo. Sempre in ordine A, B, C.</p>
+    <div class="week">${weekGrid()}</div>
+    <p class="note">${P.weekNote}</p>
 
-    <h2 class="section">Ogni seduta</h2>
+    ${P.bands ? pianoIl() : pianoCh()}
+
+    <h2 class="section">Riepilogo</h2>
+    ${sums}
+  </main></div>`;
+}
+function pianoCh(){
+  return `<h2 class="section">Ogni seduta</h2>
     <div class="blocks">
       <div class="block"><b>10'</b><span>Riscaldo</span><small>Tapis 5% · 5,1 km/h</small></div>
       <div class="block"><b class="hot">40'</b><span>Pesi</span><small>Scheda del giorno</small></div>
@@ -567,9 +740,7 @@ function viewPiano(){
     <div class="phase hot"><header><h3>Settimane 3–6</h3><em>Costruzione</em></header><p>Serie piene come da scheda, lasci circa 2 ripetizioni in serbo. Dalla settimana 7 si passa allo split per gruppi muscolari.</p></div>
     <div class="dark"><h3>Come leggere «3 × 10–12»</h3><p>3 serie da 10 a 12 ripetizioni. Parti col peso con cui arrivi a 10. Quando fai 12 in tutte le serie, la volta dopo sali di uno step e riparti da 10. Il registro te lo segnala da solo.</p></div>
 
-    <h2 class="section">Riepilogo</h2>
-    ${sums}
-  </main></div>`;
+`;
 }
 
 function viewDay(L){
@@ -581,7 +752,7 @@ function viewDay(L){
     return `
     <article class="ex" id="ex-${L}${i}">
       <figure>
-        <img src="anim/${k}.webp" alt="${esc(e.n)}: foto reale del movimento" loading="${i<2?"eager":"lazy"}" width="560" height="373">
+        <img src="anim/${e.img || k}.webp" alt="${esc(e.n)}: foto reale del movimento" loading="${i<2?"eager":"lazy"}" width="560" height="373">
         <span class="num">${i+1}</span>
       </figure>
       <div class="ex-body">
@@ -599,15 +770,45 @@ function viewDay(L){
       </div>
     </article>`;
   }).join("");
-  return `<div data-day="${L}">${hero(`Allenamento ${L} · ${d.day}`, d.sub, `${d.slots.length} esercizi, circa 40 minuti di pesi più cardio.`, L)}
+  return `<div data-day="${L}">${hero(`${P.n} · Allenamento ${L} · ${d.day}`, d.sub, `${d.slots.length} ${P.dayNote}`, L)}
     <main>
-      <div class="tip">Tocca il tempo di recupero dopo ogni serie. Se una macchina è occupata o non c'è, scegli un'alternativa: la scelta resta salvata. Il cardio è in fondo alla pagina.</div>
+      <div class="tip">${P.tip}</div>
+      ${P.bands ? blockWC(WARM) : ""}
       ${cards}
-      ${cardioBlock(L)}
+      ${P.cardio ? cardioBlock(L) : ""}
+      ${P.bands ? blockWC(COOL) : ""}
     </main></div>`;
 }
 
-function viewRegole(){
+function viewRegole(){ return P.bands ? regoleIl() : regoleCh(); }
+
+function regoleIl(){
+  const rules = [
+    ["Tempo","2 secondi per tornare indietro, 1 per spingere. Con l'elastico il ritorno controllato è metà dell'esercizio."],
+    ["Tensione","Parti con la banda già in leggera tensione: se i primi centimetri sono molli, accorcia la presa o allarga i piedi."],
+    ["Banda giusta","Quella con cui arrivi a 12 ripetizioni faticose ma pulite. Se ne fai 15 facili in tutte le serie, passa al colore dopo."],
+    ["Controlla la banda","Prima di ogni seduta guarda se ci sono taglietti o screpolature: una banda che si rompe in tensione frusta forte."],
+    ["Mai verso il viso","Non tendere la banda puntandola verso gli occhi, tuoi o di chi ti sta davanti."],
+    ["Ancoraggio","Ancoraggio da porta dal lato che non si apre verso di te, porta chiusa. Niente maniglie, termosifoni o mobili leggeri."],
+    ["Quanto allungarla","Al massimo due volte e mezza la sua lunghezza a riposo. Oltre si rovina e la tensione diventa imprevedibile."],
+    ["Indolenzimento","Normale nelle prime settimane, passa in 2–3 giorni. Ci si allena lo stesso."],
+    ["Dolore articolare","Fitta a ginocchio, spalla o schiena: fermati e salta l'esercizio."]
+  ].map(([t,q]) => `<div class="rule"><b>${t}</b><p>${q}</p></div>`).join("");
+  return `<div data-day="A">${hero("Da sapere","Regole","Bande, sicurezza e cosa fare se qualcosa non va.")}
+  <main>
+    ${whoSwitch()}
+    <h2 class="section">Le bande</h2>
+    ${bandList()}
+    <p class="note">I chili sono indicativi: con l'elastico la resistenza cresce man mano che lo allunghi. Due bande insieme si possono combinare, se una sola è troppo poco e la successiva troppo.</p>
+    <h2 class="section">In casa</h2>
+    ${rules}
+    <h2 class="section">Riscaldamento e defaticamento</h2>
+    <div class="dark"><h3>Prima</h3><p>6 minuti, li trovi in cima a ogni allenamento: servono a scaldare spalle e anche, che sono le parti che lavorano di più.</p><h3>Dopo</h3><p>5 minuti di allungamenti in fondo alla pagina. Niente di eroico: respira e non rimbalzare.</p></div>
+    ${dataBlock()}
+  </main></div>`;
+}
+
+function regoleCh(){
   const rules = [
     ["Tempo","2 secondi per scendere, 1 per spingere. Il ritorno lento è la parte che costruisce."],
     ["Recupero","Usa il timer: a occhio si riparte sempre troppo presto."],
@@ -615,10 +816,10 @@ function viewRegole(){
     ["Macchina occupata","Scegli un'alternativa nella scheda, oppure cambia ordine e torna dopo."],
     ["Indolenzimento","Normale nelle prime settimane, passa in 2–3 giorni. Ci si allena lo stesso."],
     ["Dolore articolare","Fitta a ginocchio, spalla o schiena: fermati e salta l'esercizio."]
-  ].map(([t,p]) => `<div class="rule"><b>${t}</b><p>${p}</p></div>`).join("");
-  const n = Object.values(DB.logs).reduce((a,l) => a + l.length, 0);
+  ].map(([t,q]) => `<div class="rule"><b>${t}</b><p>${q}</p></div>`).join("");
   return `<div data-day="A">${hero("Da sapere","Regole","Cardio, recuperi e cosa fare se qualcosa non va.")}
   <main>
+    ${whoSwitch()}
     <h2 class="section">Cardio</h2>
     <div class="phase"><h3>Tapis roulant</h3><p>Camminata in salita dopo i pesi: 15 minuti al 5% nelle prime due settimane, poi 20 minuti al 7%, poi 20–25 minuti all'8–10%. Trovi tutto in fondo a ogni allenamento, con il timer.</p></div>
     <div class="phase"><h3>Cyclette</h3><p>60–70 pedalate al minuto, resistenza che ti fa sudare senza toglierti il fiato. Ottima quando i piedi sono stanchi.</p></div>
@@ -626,22 +827,26 @@ function viewRegole(){
     ${rules}
     <h2 class="section">Checkpoint</h2>
     <div class="dark"><h3>BIA di partenza</h3><p>Prima di allenarti, idratato normalmente. È il tuo punto zero.</p><h3>Fine settimana 6</h3><p>Nuova BIA, confronto e passaggio allo split: petto, gambe, schiena.</p></div>
-    <h2 class="section">I tuoi dati</h2>
-    <p class="note" style="margin:0 0 10px">Registro e scelte restano salvati su questo telefono (${n} ${n===1?"sessione registrata":"sessioni registrate"}). Fai un backup ogni tanto, soprattutto prima di cambiare telefono o cancellare i dati del browser.</p>
-    <div class="databtns">
-      <button type="button" class="databtn" id="exp">Esporta backup</button>
-      <label class="databtn" for="imp">Importa backup</label>
-    </div>
-    <input type="file" id="imp" accept="application/json" hidden>
+    ${dataBlock()}
   </main></div>`;
 }
 
 /* ---------- router ---------- */
 const app = document.getElementById("app");
+const nav = document.getElementById("nav");
+const calIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>';
+const infoIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>';
+function renderNav(){
+  const ls = Object.keys(DAYS);
+  nav.style.gridTemplateColumns = `repeat(${ls.length + 2},1fr)`;
+  nav.innerHTML = `<a href="#piano" data-v="piano">${calIcon}Piano</a>` +
+    ls.map(L => `<a href="#${L}" data-v="${L}" data-l="${L}"><b>${L}</b>${DAYS[L].day}</a>`).join("") +
+    `<a href="#regole" data-v="regole">${infoIcon}Regole</a>`;
+}
 function render(keepScroll){
   let v = location.hash.slice(1);
-  if(!["piano","A","B","C","regole"].includes(v)){
-    v = ({1:"A",3:"B",5:"C"})[new Date().getDay()] || "piano";
+  if(!["piano","regole"].concat(Object.keys(DAYS)).includes(v)){
+    v = P.wd[new Date().getDay()] || "piano";
     history.replaceState(null,"","#"+v);
   }
   const y = window.scrollY;
@@ -653,10 +858,12 @@ function render(keepScroll){
   window.scrollTo(0, keepScroll ? y : 0);
 }
 window.addEventListener("hashchange", () => render(false));
+renderNav();
 render(false);
 
 /* ---------- interazioni ---------- */
 app.addEventListener("click", e => {
+  const w = e.target.closest("[data-prof]"); if(w) return setProfile(w.dataset.prof);
   const b = e.target.closest(".rec"); if(b) return start(+b.dataset.rec, b.dataset.name);
   const a = e.target.closest(".alt");
   if(a){
@@ -668,9 +875,9 @@ app.addEventListener("click", e => {
     return;
   }
   if(e.target.id === "exp"){
-    const blob = new Blob([JSON.stringify(DB, null, 2)], {type:"application/json"});
+    const blob = new Blob([JSON.stringify({profilo:PID, swaps:DB.swaps, logs:DB.logs}, null, 2)], {type:"application/json"});
     const url = URL.createObjectURL(blob), link = document.createElement("a");
-    link.href = url; link.download = `scheda-backup-${today()}.json`; document.body.appendChild(link); link.click();
+    link.href = url; link.download = `scheda-${PID}-${today()}.json`; document.body.appendChild(link); link.click();
     setTimeout(() => { URL.revokeObjectURL(url); link.remove(); }, 1000);
   }
 });
@@ -695,15 +902,18 @@ app.addEventListener("submit", e => {
     setTimeout(() => render(true), 900);
     return;
   }
-  const k = f.dataset.k, bw = f.dataset.bw, rows = f.querySelectorAll(`input[name^="r"]`);
+  const k = f.dataset.k, bw = f.dataset.bw, band = f.dataset.band, rows = f.querySelectorAll(`input[name^="r"]`);
   const sets = [...rows].map((r, s) => {
+    const reps = r.value !== "" ? +r.value : null;
+    if(bw) return {r:reps};
+    if(band){ const sel = f.querySelector(`select[name="b${s}"]`); return {b: sel ? sel.value : null, r:reps}; }
     const kgEl = f.querySelector(`input[name="kg${s}"]`);
     const kg = kgEl && kgEl.value !== "" ? +kgEl.value : (kgEl && kgEl.placeholder !== "kg" && r.value !== "" ? +kgEl.placeholder : null);
-    const reps = r.value !== "" ? +r.value : null;
-    return bw ? {r:reps} : {kg, r:reps};
+    return {kg, r:reps};
   });
   const note = f.querySelector("textarea").value.trim();
   if(!sets.some(x => x.r || x.kg) && !note){ f.querySelector("input").focus(); return; }
+
   const list = DB.logs[k] = DB.logs[k] || [];
   const idx = list.findIndex(x => x.d === today());
   const entry = {d:today(), sets};
@@ -716,12 +926,16 @@ app.addEventListener("submit", e => {
 
 app.addEventListener("change", e => {
   if(e.target.id !== "imp" || !e.target.files[0]) return;
-  e.target.files[0].text().then(t => {
+  const input = e.target;
+  input.files[0].text().then(t => {
     const d = JSON.parse(t);
     if(!d || typeof d !== "object" || !d.logs) throw new Error();
+    input.value = "";
+    if(d.profilo && d.profilo !== PID &&
+       !confirm(`Questo backup è del profilo ${PROF[d.profilo]?.n || d.profilo}. Vuoi importarlo lo stesso nel profilo ${P.n}, sostituendo i dati di adesso?`)) return;
     DB = {swaps: d.swaps || {}, logs: d.logs}; persist(); render(false);
-    alert("Backup importato.");
-  }).catch(() => alert("Questo file non è un backup della scheda. Usa il file .json creato con «Esporta backup»."));
+    alert(`Backup importato nel profilo ${P.n}.`);
+  }).catch(() => { input.value = ""; alert("Questo file non è un backup della scheda. Usa il file .json creato con «Esporta backup»."); });
 });
 
 /* ---------- timer di recupero ---------- */
