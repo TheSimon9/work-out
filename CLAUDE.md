@@ -54,7 +54,13 @@ I chili sono indicativi: con l'elastico la resistenza cresce man mano che lo all
 - **Progressione a colori**: quando fa 15 ripetizioni in tutte le serie, la volta dopo passa alla banda successiva e riparte da 12. Mezzo passo = accorciare la presa sulla stessa banda.
 - Manca un rematore orizzontale: il Free Exercise DB non ha foto di un rematore con elastici, quindi la schiena la coprono aperture posteriori e pull apart. Se serve, va aggiunto senza animazione o con un'altra fonte.
 
-Regole da trainer: niente esercizi ad alto impatto (salti, corsa) finché il peso è questo; macchine e cavi prima dei pesi liberi; nessuna indicazione alimentare con numeri precisi, per l'alimentazione rimanda a un nutrizionista.
+Regole da trainer: niente esercizi ad alto impatto (salti, corsa) finché il peso è questo; macchine e cavi prima dei pesi liberi.
+
+### Alimentazione
+
+Christian è seguito da un nutrizionista. **L'app traccia, non prescrive**: il target giornaliero di kcal lo imposta lui con il numero che gli ha dato il nutrizionista, e l'app non lo calcola né lo suggerisce. Nessun piano alimentare, nessun menu, nessun macro inventato.
+
+Quello che invece si fa volentieri: stimare le kcal di un piatto che descrive o fotografa, dicendo sempre che è una stima; aiutarlo a leggere i suoi dati (media del peso, andamento delle kcal); tenere aggiornata la tabella `FOOD`. Se una stima è difficile, dillo invece di inventare un numero preciso.
 
 ## Architettura
 
@@ -79,6 +85,7 @@ tools/mkanim.py       genera nuove animazioni (non va in cache)
 - `BANDS` — le 5 bande Fokky in ordine di resistenza: `k` chiave salvata nel registro, `n` nome, `kg`, `lbs`, `c` colore del pallino. `nextBand()` dà la successiva.
 - `WARM` / `COOL` — riscaldamento e defaticamento di Ilenia, renderizzati da `blockWC()`.
 - `PHASES` — progressione del cardio (solo Christian).
+- `FOOD` — tabella alimenti per la vista Pasti: `[nome, kcal per 100 g, peso di un pezzo in grammi?]`. Valori indicativi, tutto offline. `MEALS` sono i quattro pasti della giornata.
 
 Esercizi con elastico: `band:true` fa comparire il menu dei colori al posto dei kg nel registro, `b0` è la banda consigliata la prima volta, `img` punta a un'animazione di un altro esercizio quando il movimento è lo stesso (es. `el_bridge` riusa `glute_bridge`).
 
@@ -95,9 +102,16 @@ Esercizi con elastico: `band:true` fa comparire il menu dei colori al posto dei 
     "cardio_treadmill": [{ d: "...", min: 15, inc: 5, kmh: 5.1 }],
     "cardio_bike":      [{ d: "...", min: 15, lvl: 8 }],
     "el_squat":  [{ d: "...", sets: [{ b: "nero", r: 15 }, ...] }]   // elastici: colore invece dei kg
+  },
+  food: {                                                   // solo Christian, ma il blocco esiste per tutti
+    target: 1900,                                           // kcal al giorno, impostate a mano. null se non c'è
+    days:    { "2026-11-08": [{ m: "pranzo", n: "Pasta secca", g: 120, kcal: 424 }] },
+    weights: { "2026-11-08": 104 }                          // peso della mattina, kg
   }
 }
 ```
+
+`normDB()` aggiunge il blocco `food` ai backup fatti prima che esistesse: i vecchi file continuano a importarsi.
 
 `note` è opzionale (dolori, sensazioni, regolazioni della macchina) ed esiste anche sulle entry del cardio: serve a Christian per raccontare com'è andata, e finisce nel backup JSON. Una entry può avere solo la nota, senza serie.
 

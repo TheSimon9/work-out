@@ -240,6 +240,49 @@ footer a{color:inherit}
 .hist li{flex-wrap:wrap}
 .hist li .qn{flex-basis:100%}
 
+/* pasti */
+.kcal{background:var(--ink);color:#fff;border-radius:16px;padding:16px 18px;margin-bottom:14px}
+.kcal .row{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.kcal .big{font:700 3.1rem/1 var(--display);color:var(--accent)}
+.kcal .big small{font:600 1rem/1 var(--body);color:#C9CDD3;margin-left:4px}
+.kcal .goal{font:600 .85rem/1.3 var(--body);color:#C9CDD3;text-align:right}
+.kcal .goal b{display:block;color:#fff;font:700 1.5rem/1.1 var(--display)}
+.kcal .track{height:8px;border-radius:6px;background:rgba(255,255,255,.18);margin-top:12px;overflow:hidden}
+.kcal .fill{height:100%;background:var(--accent);border-radius:6px;transition:width .3s}
+.kcal .fill.over{background:var(--danger)}
+.kcal .sub{font-size:.85rem;color:#C9CDD3;margin-top:8px}
+.meal{background:var(--card);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.meal h3{font:700 1.15rem/1 var(--display);display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.meal h3 span{font:600 .85rem/1 var(--body);color:var(--accent)}
+.meal ul{list-style:none;margin-top:8px}
+.meal li{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line);font-size:.92rem}
+.meal li:first-child{border-top:0}
+.meal li .nm{flex:1}
+.meal li .nm em{display:block;color:var(--muted);font-style:normal;font-size:.8rem}
+.meal li b{font:700 1.05rem/1 var(--display);white-space:nowrap}
+.meal li button{border:0;background:none;color:var(--muted);font:700 1.3rem/1 var(--body);cursor:pointer;padding:0 2px;flex:none}
+.meal .empty{color:var(--muted);font-size:.88rem;padding:6px 0}
+.addf{background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px;display:grid;gap:8px}
+.addf select,.addf input{width:100%;font:600 1rem/1.1 var(--body);padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.addf input:focus,.addf select:focus{outline:none;border-color:var(--accent)}
+.addf .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.addf .hintf{font-size:.82rem;color:var(--muted)}
+.addf button{border:0;border-radius:12px;background:var(--ink);color:#fff;font:600 .95rem/1 var(--body);padding:13px;cursor:pointer}
+.wbox{display:grid;grid-template-columns:1fr auto;gap:8px;background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px;align-items:center}
+.wbox input{width:100%;font:700 1.3rem/1 var(--display);padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.wbox input:focus{outline:none;border-color:var(--accent)}
+.wbox button{border:0;border-radius:10px;background:var(--ink);color:#fff;font:600 .9rem/1 var(--body);padding:12px 16px;cursor:pointer}
+.wbox p{grid-column:1/-1;color:var(--muted);font-size:.84rem;margin:0}
+.fdays{list-style:none;background:var(--card);border-radius:12px;overflow:hidden}
+.fdays li{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid var(--line);font-size:.9rem}
+.fdays li:first-child{border-top:0}
+.fdays li b{font:700 1.05rem/1 var(--display)}
+.fdays li .w{color:var(--muted);font-size:.84rem}
+.fdays li.over b{color:var(--danger)}
+.copyf{width:100%;border:1.5px solid var(--ink);background:#fff;color:var(--ink);border-radius:12px;padding:12px;font:600 .9rem/1 var(--body);cursor:pointer;margin-top:4px}
+.copyf.ok{background:var(--ink);color:#fff}
+.copyt{width:100%;margin-top:8px;font:400 .85rem/1.4 var(--body);padding:10px;border:1.5px solid var(--line);border-radius:10px;resize:vertical}
+
 [hidden]{display:none!important}
 @media (prefers-reduced-motion:reduce){.timer{transition:none}}
 </style>
@@ -370,6 +413,41 @@ const BANDS = [
 const bandOf = k => BANDS.find(b => b.k === k);
 const nextBand = k => { const i = BANDS.findIndex(b => b.k === k); return i >= 0 && i < BANDS.length-1 ? BANDS[i+1] : null; };
 
+/* ---------- tabella alimenti: kcal per 100 g, valori indicativi ----------
+   Terzo campo = peso di un pezzo in grammi, quando ha senso contarli a pezzi.
+   Servono a fare il conto a mano senza rete: non sostituiscono il piano del nutrizionista. */
+const FOOD = [
+  ["Pasta secca",353],["Pasta fresca all'uovo",288],["Pasta al pomodoro (cotta)",150],["Pasta al ragù (cotta)",170],
+  ["Riso",332],["Risotto (cotto)",150],["Lasagne (cotte)",170],["Gnocchi",160],["Cous cous",376],["Orzo perlato",319],
+  ["Pane comune",275],["Pane integrale",224],["Rosetta/michetta",290,70],["Piadina",310,100],["Pane carasau",400],
+  ["Pizza margherita",270],["Pizza al trancio",280],["Focaccia",290],["Grissini",433],["Crackers",428],
+  ["Fette biscottate",408,8],["Biscotti frollini",460],["Cereali da colazione",370],["Fiocchi d'avena",389],
+  ["Farina 00",340],["Pangrattato",360],["Polenta (cotta)",85],["Patate",85],["Patate fritte",312],["Patatine in busta",540],
+  ["Petto di pollo",110],["Coscia di pollo",120],["Fesa di tacchino",107],["Manzo magro",130],["Hamburger di manzo",220],
+  ["Vitello",110],["Lombo di maiale",157],["Salsiccia",300],["Cotoletta",290],["Wurstel",270],
+  ["Bresaola",151],["Prosciutto crudo",224],["Prosciutto cotto",215],["Speck",303],["Salame",425],["Mortadella",317],["Pancetta",458],
+  ["Tonno al naturale",103],["Tonno sott'olio sgocciolato",190],["Salmone fresco",185],["Salmone affumicato",147],
+  ["Merluzzo",71],["Orata",121],["Branzino",82],["Gamberi",71],["Cozze",84],["Calamari",68],["Alici",96],["Bastoncini di pesce",230],
+  ["Uovo intero",143,55],["Albume",52],["Latte intero",64],["Latte parz. scremato",46],
+  ["Yogurt bianco intero",66],["Yogurt greco 0%",57],["Yogurt alla frutta",85],
+  ["Mozzarella",253],["Mozzarella di bufala",288],["Ricotta vaccina",146],["Parmigiano",387],["Grana",392],
+  ["Stracchino",300],["Gorgonzola",324],["Formaggio spalmabile",250],["Scamorza",334],["Provolone",365],["Emmental",403],["Feta",264],
+  ["Burro",758],["Panna da cucina",337],["Besciamella",130],
+  ["Ceci cotti",120],["Fagioli cotti",91],["Lenticchie cotte",92],["Piselli",76],["Hummus",166],["Edamame",122],
+  ["Insalata",19],["Pomodori",18],["Zucchine",11],["Melanzane",18],["Peperoni",22],["Broccoli",27],["Spinaci",31],
+  ["Carote",35],["Finocchi",9],["Cavolfiore",25],["Funghi",22],["Cipolla",26],["Zucca",18],["Fagiolini",18],["Mais dolce",100],
+  ["Mela",52,180],["Banana",89,120],["Arancia",47,200],["Pera",58,170],["Kiwi",61,80],["Uva",69],["Fragole",32],
+  ["Pesca",39,150],["Ananas",50],["Anguria",30],["Melone",34],["Mandarino",53,80],["Datteri",282],
+  ["Mandorle",603],["Noci",654],["Nocciole",628],["Pistacchi",601],["Arachidi",598],["Frutta secca mista",600],
+  ["Olio extravergine",899],["Maionese",680],["Ketchup",112],["Senape",66],["Aceto balsamico",88],
+  ["Sugo di pomodoro",60],["Pesto",450],["Zucchero",392],["Miele",304],["Marmellata",270],["Crema di nocciole",539],
+  ["Cioccolato fondente",546],["Cioccolato al latte",545],["Gelato",207],["Cornetto",400,60],["Brioche",370,70],["Croissant vuoto",406],["Pasta sfoglia",410],
+  ["Birra",43],["Vino rosso",85],["Vino bianco",82],["Spritz",120],["Gin tonic",80],["Amaro",230],
+  ["Coca cola",42],["Succo di frutta",50],["Cappuccino",60],["Caffè",2],["Acqua",0],
+];
+const foodByName = n => FOOD.find(f => f[0].toLowerCase() === String(n).trim().toLowerCase());
+const MEALS = [["colazione","Colazione"],["spuntino","Spuntino"],["pranzo","Pranzo"],["cena","Cena"]];
+
 /* ---------- riscaldamento e defaticamento con gli elastici ---------- */
 const WARM = {t:"Riscaldamento", min:6, sub:"Prima di iniziare, sempre", items:[
   ["Marcia sul posto", "2 minuti, braccia che accompagnano. Vanno bene anche le scale o un gradino"],
@@ -431,7 +509,7 @@ const DAYS_IL = {
 
 /* ---------- i due profili: dati separati, nessuno vede quelli dell'altra ---------- */
 const PROF = {
-  christian:{n:"Christian", key:"scheda.v1", days:DAYS_CH, cardio:true, wd:{1:"A",3:"B",5:"C"},
+  christian:{n:"Christian", key:"scheda.v1", days:DAYS_CH, cardio:true, food:true, wd:{1:"A",3:"B",5:"C"},
     heroP:["Piano di 6 settimane","Full body A·B·C","Tre allenamenti diversi, macchine e cavi, circa 65–75 minuti."],
     weekNote:"Giorni spostabili, purché tra una seduta e l'altra ci sia almeno un giorno di riposo. Sempre in ordine A, B, C.",
     dayNote:"esercizi, circa 40 minuti di pesi più cardio.",
@@ -450,7 +528,13 @@ try { const v = localStorage.getItem(PKEY); if(v && PROF[v]) PID = v; } catch(e)
 let P = PROF[PID], KEY = P.key, DAYS = P.days, DB;
 function loadDB(){
   try { DB = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ DB = {}; }
+  normDB();
+}
+// migrazione: i backup fatti prima dei pasti non hanno il blocco food
+function normDB(){
   DB.swaps = DB.swaps || {}; DB.logs = DB.logs || {};
+  DB.food = DB.food || {}; DB.food.days = DB.food.days || {}; DB.food.weights = DB.food.weights || {};
+  if(DB.food.target === undefined) DB.food.target = null;
 }
 loadDB();
 const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch(e){} };
@@ -831,26 +915,128 @@ function regoleCh(){
   </main></div>`;
 }
 
+/* ---------- pasti ---------- */
+const dayItems = d => DB.food.days[d] || [];
+const dayKcal = d => dayItems(d).reduce((a,x) => a + (+x.kcal || 0), 0);
+const qtyText = x => x.g ? `${x.g} g` : "";
+function foodDates(){ return Object.keys(DB.food.days).filter(d => dayItems(d).length).sort().reverse(); }
+function weightAvg(n){
+  const ds = Object.keys(DB.food.weights).sort().reverse().slice(0, n).map(d => +DB.food.weights[d]);
+  return ds.length ? Math.round(ds.reduce((a,b) => a+b, 0) / ds.length * 10) / 10 : null;
+}
+function copyText(){
+  const d = today(), it = dayItems(d);
+  if(!it.length) return "";
+  return `Pasti di ${niceDate(d)}\n` + MEALS.map(([k,lab]) => {
+    const rows = it.filter(x => x.m === k);
+    if(!rows.length) return "";
+    return `\n${lab}\n` + rows.map(x => `- ${x.n}${x.g?` ${x.g} g`:""} — ${x.kcal} kcal`).join("\n");
+  }).filter(Boolean).join("\n") + `\n\nTotale: ${dayKcal(d)} kcal`;
+}
+function viewPasti(){
+  const d = today(), tot = dayKcal(d), tg = DB.food.target;
+  const pct = tg ? Math.min(100, Math.round(tot / tg * 100)) : 0;
+  const over = tg && tot > tg;
+  const rest = tg ? tg - tot : null;
+
+  const meals = MEALS.map(([k,lab]) => {
+    const rows = dayItems(d).map((x,i) => [x,i]).filter(([x]) => x.m === k);
+    const sub = rows.reduce((a,[x]) => a + (+x.kcal||0), 0);
+    return `<section class="meal">
+      <h3>${lab}<span>${sub} kcal</span></h3>
+      ${rows.length ? `<ul>${rows.map(([x,i]) => `<li>
+        <span class="nm">${esc(x.n)}${qtyText(x)?`<em>${qtyText(x)}</em>`:""}</span>
+        <b>${x.kcal}</b>
+        <button type="button" data-del="${i}" aria-label="Togli ${esc(x.n)}">×</button></li>`).join("")}</ul>`
+        : `<p class="empty">Niente ancora.</p>`}
+    </section>`;
+  }).join("");
+
+  const hist = foodDates().slice(0, 14).map(dd => {
+    const k = dayKcal(dd), w = DB.food.weights[dd];
+    return `<li class="${tg && k > tg ? "over" : ""}"><span>${niceDate(dd)}</span><span class="w">${w ? w + " kg" : ""}</span><b>${k}</b></li>`;
+  }).join("");
+
+  const avg7 = weightAvg(7), avg14 = weightAvg(14);
+  const trend = avg7 !== null && avg14 !== null && Object.keys(DB.food.weights).length >= 8
+    ? `Media ultimi 7 giorni ${avg7} kg, ultimi 14 ${avg14} kg.` : (avg7 !== null ? `Media ultimi 7 giorni: ${avg7} kg.` : "");
+
+  return `<div data-day="B">${hero("Alimentazione","Pasti","Quello che mangi, in kcal. Il target lo dà il nutrizionista.")}
+  <main>
+    <div class="kcal">
+      <div class="row">
+        <div class="big">${tot}<small>kcal oggi</small></div>
+        ${tg ? `<div class="goal">${over ? "sopra di" : "ancora"}<b>${Math.abs(rest)}</b>kcal</div>` : ""}
+      </div>
+      ${tg ? `<div class="track"><div class="fill ${over?"over":""}" style="width:${pct}%"></div></div>` : ""}
+      <p class="sub">${tg ? `Target ${tg} kcal al giorno.` : "Imposta il target che ti ha dato il nutrizionista qui sotto."}</p>
+    </div>
+
+    <h2 class="section">Oggi</h2>
+    ${meals}
+
+    <h2 class="section">Aggiungi</h2>
+    <form class="addf" id="addf">
+      <select name="m" aria-label="Pasto">${MEALS.map(([k,lab]) => `<option value="${k}">${lab}</option>`).join("")}</select>
+      <input name="n" list="foodlist" placeholder="Cosa hai mangiato" autocomplete="off" required>
+      <div class="two">
+        <input name="g" type="number" inputmode="decimal" min="0" step="1" placeholder="grammi">
+        <input name="kcal" type="number" inputmode="numeric" min="0" step="1" placeholder="kcal" required>
+      </div>
+      <p class="hintf" id="fhint">Scegli un alimento dalla lista e metti i grammi: le kcal le calcola l'app. Oppure scrivi tutto a mano.</p>
+      <button type="submit">Aggiungi</button>
+    </form>
+    <datalist id="foodlist">${FOOD.map(f => `<option value="${esc(f[0])}">`).join("")}</datalist>
+
+    <h2 class="section">Peso di stamattina</h2>
+    <form class="wbox" id="wform">
+      <input name="w" type="number" inputmode="decimal" min="0" step="0.1" placeholder="kg" value="${DB.food.weights[d] || ""}">
+      <button type="submit">Salva</button>
+      <p>Pesati appena sveglio, dopo il bagno, prima di mangiare. Conta la media della settimana, non il singolo giorno.${trend ? " " + trend : ""}</p>
+    </form>
+
+    <h2 class="section">Target giornaliero</h2>
+    <form class="wbox" id="tform">
+      <input name="t" type="number" inputmode="numeric" min="0" step="10" placeholder="kcal" value="${tg || ""}">
+      <button type="submit">Salva</button>
+      <p>Mettici il numero che ti ha dato il nutrizionista. L'app non se lo inventa.</p>
+    </form>
+
+    <h2 class="section">Da mandare a Claude</h2>
+    <button type="button" class="copyf" id="copyf">Copia i pasti di oggi</button>
+    <details class="hist"><summary>Mostrali come testo</summary>
+      <textarea class="copyt" rows="8" readonly>${esc(copyText() || "Nessun pasto registrato oggi.")}</textarea>
+    </details>
+    <p class="note">Le kcal della tabella sono indicative: cotture e condimenti cambiano il conto. Se un piatto non lo sai stimare, mandalo in chat con una foto.</p>
+
+    ${hist ? `<h2 class="section">Ultimi giorni</h2><ul class="fdays">${hist}</ul>` : ""}
+  </main></div>`;
+}
+
 /* ---------- router ---------- */
 const app = document.getElementById("app");
 const nav = document.getElementById("nav");
 const calIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>';
 const infoIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>';
+const forkIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2v7a2 2 0 0 0 4 0V2M8 9v13M18 2c-1.7 1.2-2.5 3-2.5 5.5S16.3 12 18 12.5V22"/></svg>';
+const views = () => ["piano","regole"].concat(Object.keys(DAYS), P.food ? ["pasti"] : []);
 function renderNav(){
   const ls = Object.keys(DAYS);
-  nav.style.gridTemplateColumns = `repeat(${ls.length + 2},1fr)`;
+  const n = ls.length + 2 + (P.food ? 1 : 0);
+  nav.style.gridTemplateColumns = `repeat(${n},1fr)`;
   nav.innerHTML = `<a href="#piano" data-v="piano">${calIcon}Piano</a>` +
     ls.map(L => `<a href="#${L}" data-v="${L}" data-l="${L}"><b>${L}</b>${DAYS[L].day}</a>`).join("") +
+    (P.food ? `<a href="#pasti" data-v="pasti">${forkIcon}Pasti</a>` : "") +
     `<a href="#regole" data-v="regole">${infoIcon}Regole</a>`;
 }
 function render(keepScroll){
   let v = location.hash.slice(1);
-  if(!["piano","regole"].concat(Object.keys(DAYS)).includes(v)){
+  if(!views().includes(v)){
     v = P.wd[new Date().getDay()] || "piano";
     history.replaceState(null,"","#"+v);
   }
   const y = window.scrollY;
-  app.innerHTML = (v==="piano"?viewPiano():v==="regole"?viewRegole():viewDay(v)) +
+  app.innerHTML = (v==="piano"?viewPiano():v==="regole"?viewRegole():v==="pasti"?viewPasti():viewDay(v)) +
     `<footer>Foto degli esercizi: <a href="https://github.com/yuhonas/free-exercise-db" rel="noopener">Free Exercise DB</a>, pubblico dominio. Fotogrammi intermedi generati per rendere il movimento fluido.</footer>`;
   document.querySelectorAll("#nav a").forEach(a => {
     if(a.dataset.v===v) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
@@ -874,8 +1060,23 @@ app.addEventListener("click", e => {
     document.querySelector(`#ex-${L}${i === "cardio" ? "c" : i} .alt[data-k="${a.dataset.k}"]`)?.focus({preventScroll:true});
     return;
   }
+  const del = e.target.closest("[data-del]");
+  if(del){
+    const list = DB.food.days[today()] || [];
+    list.splice(+del.dataset.del, 1);
+    if(!list.length) delete DB.food.days[today()];
+    persist(); render(true); return;
+  }
+  if(e.target.id === "copyf"){
+    const t = copyText();
+    if(!t) return;
+    const done = () => { e.target.textContent = "Copiato"; e.target.classList.add("ok"); setTimeout(() => render(true), 900); };
+    if(navigator.clipboard) navigator.clipboard.writeText(t).then(done, () => e.target.nextElementSibling.open = true);
+    else e.target.nextElementSibling.open = true;
+    return;
+  }
   if(e.target.id === "exp"){
-    const blob = new Blob([JSON.stringify({profilo:PID, swaps:DB.swaps, logs:DB.logs}, null, 2)], {type:"application/json"});
+    const blob = new Blob([JSON.stringify({profilo:PID, swaps:DB.swaps, logs:DB.logs, food:DB.food}, null, 2)], {type:"application/json"});
     const url = URL.createObjectURL(blob), link = document.createElement("a");
     link.href = url; link.download = `scheda-${PID}-${today()}.json`; document.body.appendChild(link); link.click();
     setTimeout(() => { URL.revokeObjectURL(url); link.remove(); }, 1000);
@@ -883,6 +1084,29 @@ app.addEventListener("click", e => {
 });
 
 app.addEventListener("submit", e => {
+  if(e.target.id === "addf"){
+    e.preventDefault();
+    const f = e.target, n = f.n.value.trim(), kcal = Math.round(+f.kcal.value);
+    if(!n || !(kcal >= 0)) return;
+    const item = {m:f.m.value, n, kcal};
+    if(f.g.value !== "") item.g = +f.g.value;
+    (DB.food.days[today()] = DB.food.days[today()] || []).push(item);
+    persist(); render(true);
+    document.querySelector("#addf [name=n]")?.focus({preventScroll:true});
+    return;
+  }
+  if(e.target.id === "wform"){
+    e.preventDefault();
+    const v = e.target.w.value;
+    if(v === "") delete DB.food.weights[today()]; else DB.food.weights[today()] = +v;
+    persist(); render(true); return;
+  }
+  if(e.target.id === "tform"){
+    e.preventDefault();
+    const v = e.target.t.value;
+    DB.food.target = v === "" ? null : Math.round(+v);
+    persist(); render(true); return;
+  }
   const f = e.target.closest("form.log"); if(!f) return;
   e.preventDefault();
   if(f.classList.contains("cardio")){
@@ -924,6 +1148,16 @@ app.addEventListener("submit", e => {
   setTimeout(() => render(true), 900);
 });
 
+/* calcolo automatico delle kcal: alimento dalla tabella × grammi */
+app.addEventListener("input", e => {
+  const f = e.target.closest("#addf"); if(!f) return;
+  const hint = f.querySelector("#fhint"), hit = foodByName(f.n.value);
+  if(!hit){ if(e.target.name === "n") hint.textContent = "Non è in tabella: metti tu le kcal, o mandamelo in chat."; return; }
+  if(e.target.name === "n" && hit[2] && f.g.value === "") f.g.value = hit[2];
+  if(f.g.value !== "") f.kcal.value = Math.round(hit[1] * +f.g.value / 100);
+  hint.textContent = `${hit[0]}: ${hit[1]} kcal per 100 g${hit[2] ? ` · un pezzo ≈ ${hit[2]} g` : ""}.`;
+});
+
 app.addEventListener("change", e => {
   if(e.target.id !== "imp" || !e.target.files[0]) return;
   const input = e.target;
@@ -933,7 +1167,7 @@ app.addEventListener("change", e => {
     input.value = "";
     if(d.profilo && d.profilo !== PID &&
        !confirm(`Questo backup è del profilo ${PROF[d.profilo]?.n || d.profilo}. Vuoi importarlo lo stesso nel profilo ${P.n}, sostituendo i dati di adesso?`)) return;
-    DB = {swaps: d.swaps || {}, logs: d.logs}; persist(); render(false);
+    DB = {swaps: d.swaps || {}, logs: d.logs, food: d.food}; normDB(); persist(); render(false);
     alert(`Backup importato nel profilo ${P.n}.`);
   }).catch(() => { input.value = ""; alert("Questo file non è un backup della scheda. Usa il file .json creato con «Esporta backup»."); });
 });
