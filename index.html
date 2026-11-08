@@ -259,8 +259,11 @@ footer a{color:inherit}
 .meal li:first-child{border-top:0}
 .meal li .nm{flex:1}
 .meal li .nm em{display:block;color:var(--muted);font-style:normal;font-size:.8rem}
-.meal li b{font:700 1.05rem/1 var(--display);white-space:nowrap}
+.meal li .thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;background:var(--line);flex:none}
+.meal li .kc{border:0;background:none;color:var(--ink);font:700 1.05rem/1 var(--display);white-space:nowrap;cursor:pointer;padding:4px 2px}
+.meal li .kc.todo{color:var(--accent);background:var(--accent-l);border-radius:20px;padding:5px 10px;font:600 .78rem/1 var(--body)}
 .meal li button{border:0;background:none;color:var(--muted);font:700 1.3rem/1 var(--body);cursor:pointer;padding:0 2px;flex:none}
+.photob{display:block;text-align:center;border:1.5px solid var(--ink);border-radius:12px;padding:12px;font:600 .95rem/1 var(--body);cursor:pointer}
 .meal .empty{color:var(--muted);font-size:.88rem;padding:6px 0}
 .addf{background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px;display:grid;gap:8px}
 .addf select,.addf input{width:100%;font:600 1rem/1.1 var(--body);padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
@@ -348,6 +351,9 @@ const EX = {
   el_skull:{n:"French press con elastico", m:"Elastico ancorato in basso dietro la tua testa, tu sdraiata a terra o su una panca con la banda in linea con la testa.", h:"Gomiti alti e fermi, braccia perpendicolari a terra. Distendi i gomiti, pausa in alto, torna piano.", w:"Si muovono solo gli avambracci: i gomiti restano dove sono.", p:["triceps"], sx:[], band:true, b0:"giallo"},
   el_tri_oh:{n:"Tricipiti sopra la testa", m:"In piedi sopra l'elastico (o ancorato in basso), banda che passa dietro la schiena e maniglie dietro la testa.", h:"Gomiti alti e vicini alla testa. Distendi le braccia verso l'alto, poi torna piano dietro la testa.", w:"I gomiti non si aprono verso l'esterno e la schiena non si inarca.", p:["triceps"], sx:[], band:true, b0:"giallo"},
   el_calf:{n:"Polpacci con elastico", s:"3 × 15–20", m:"In piedi con le punte dei piedi sopra l'elastico, maniglie all'altezza delle spalle.", h:"Sali sulle punte più in alto che puoi, stringi i polpacci un secondo e scendi lentamente.", w:"Movimento lento: la discesa conta più della salita.", p:["calves"], sx:[], band:true, b0:"rosso"},
+  curl:{n:"Curl con manubri", m:"Due manubri, in piedi. Bastano le rastrelliere: non serve nessuna macchina.", h:"Gomiti incollati ai fianchi, palmi in avanti. Piega le braccia fino alle spalle, scendi in 2 secondi.", w:"Il busto non dondola e i gomiti non scappano avanti: se succede, il peso è troppo.", p:["biceps"], sx:["forearms"]},
+  curl_rope:{n:"Curl ai cavi", m:"Torre cavi con il cavo in basso, corda o barretta agganciata.", h:"In piedi davanti alla torre, gomiti ai fianchi. Tira verso le spalle, torna piano col cavo sempre in tensione.", w:"Non arretrare col busto per aiutarti: il cavo tira, tu stai fermo.", p:["biceps"], sx:["forearms"]},
+  hammer:{n:"Curl a martello", m:"Due manubri tenuti come un martello, palmi che si guardano.", h:"Palmi verso l'interno per tutto il movimento. Sali fino alle spalle, scendi lento.", w:"Stesso errore del curl normale: gomiti fermi, niente slanci.", p:["biceps"], sx:["forearms"]},
   farmer:{n:"Farmer walk", s:"3 × 30 m", m:"Due manubri pesanti, uno per mano. In foto dei maniglioni, il movimento è lo stesso.", h:"Stai dritto e cammina a passi corti e regolari.", w:"Spalle basse, addome contratto, non ondeggiare.", p:["forearms"], sx:["traps","abdominals","lower back"]},
 };
 
@@ -365,6 +371,9 @@ const STEPS = {
   el_skull:["Fissa la banda in basso dietro di te e sdraiati in modo che sia in linea con la tua testa.","Prendi la banda e alza i gomiti finché il braccio è perpendicolare al pavimento: col gomito piegato la banda sta sopra la testa. È la posizione di partenza.","Distendi il gomito tenendo il braccio fermo, pausa in alto, poi torna alla posizione di partenza."],
   el_tri_oh:["Ancora la banda in basso: puoi anche semplicemente salirci sopra con i piedi.","Porta la banda dietro la testa, presa coi palmi in avanti e gomiti alti. È la posizione di partenza.","Distendi i gomiti per raddrizzare le braccia, tenendo la parte alta del braccio ferma.","Fermati un istante e torna alla posizione di partenza."],
   el_calf:["Mettiti sopra l'elastico con le punte dei piedi, controllando che la banda sia della stessa lunghezza da entrambi i lati.","Tenendo le maniglie, portale all'altezza della testa come se dovessi fare un lento avanti: così la banda va in tensione. È la posizione di partenza.","Mani ferme vicino alle spalle, sali sulle punte espirando e stringi forte i polpacci in alto.","Dopo un secondo di contrazione torna giù lentamente."],
+  curl:["In piedi, un manubrio per mano, braccia distese lungo i fianchi, palmi rivolti in avanti.","Tenendo i gomiti fermi contro il busto, piega le braccia e porta i manubri verso le spalle, espirando e contraendo i bicipiti.","Un secondo di contrazione in alto, poi scendi lentamente inspirando fino a braccia distese."],
+  curl_rope:["Aggancia la corda al cavo basso e mettiti in piedi davanti alla torre, piedi larghi come le spalle.","Prendi la corda coi palmi che si guardano, braccia distese e gomiti vicini al busto. È la posizione di partenza.","Piega i gomiti e porta le mani verso le spalle senza muovere la parte alta del braccio.","Fermati un istante in alto, poi torna giù lentamente senza far appoggiare i pesi."],
+  hammer:["In piedi, un manubrio per mano lungo i fianchi, palmi rivolti verso il corpo.","Gomiti fermi contro il busto, solleva un manubrio verso la spalla tenendo il palmo sempre rivolto all'interno.","Contrai il bicipite in alto per un secondo, poi scendi lentamente.","Ripeti con l'altro braccio, alternando."],
   leg_press:["Siediti sulla macchina e appoggia i piedi al centro della pedana, larghi come le spalle.","Sblocca le sicurezze e spingi la pedana fino a gambe distese, senza bloccare le ginocchia: busto e gambe formano un angolo di 90°. È la posizione di partenza.","Inspira e scendi lentamente finché coscia e gamba formano 90°.","Spingi soprattutto coi talloni, usando i quadricipiti, ed espira mentre risali.","A fine serie riaggancia le sicurezze prima di alzarti: non vuoi quella pedana addosso."],
   goblet:["In piedi, tieni il manubrio stretto al petto con tutte e due le mani.","Scendi in accosciata tra le gambe, petto e testa alti, schiena dritta.","In basso fermati un istante e usa i gomiti per spingere le ginocchia verso l'esterno.","Risali alla posizione di partenza."],
   chest:["Regola il sedile: le maniglie devono trovarsi tra la parte bassa e la metà del petto.","Petto e testa alti, scapole tirate indietro. È la posizione di partenza.","Spingi le maniglie in avanti distendendo i gomiti.","Dopo una breve pausa torna indietro fermandoti poco prima dei fermi: il muscolo resta in tensione fino a fine serie."],
@@ -464,29 +473,26 @@ const COOL = {t:"Defaticamento", min:5, sub:"Alla fine, con calma", items:[
   ["Glutei", "da seduta, caviglia sul ginocchio opposto, busto avanti — 30″ per lato"],
   ["Polpaccio", "mani al muro, gamba dietro distesa, tallone a terra — 30″ per gamba"]]};
 
-/* ---------- allenamenti: ogni slot ha un default e delle alternative ---------- */
+/* ---------- allenamenti: ogni slot ha un default e delle alternative ----------
+   Da novembre 2026 due sedute a settimana invece di tre: meglio due fatte che tre programmate.
+   Recuperi lunghi sui primi tre, che è il motivo per cui la seconda serie di shoulder press crollava. */
 const DAYS_CH = {
-  A:{day:"Lunedì", sub:"Spinta, quadricipiti e spalle", slots:[
-    {d:"leg_press", alt:["goblet"], s:"3 × 10–12", r:120},
-    {d:"chest", alt:["chest_db"], s:"3 × 10–12", r:90},
-    {d:"lat", alt:["lat_under","high_row"], s:"3 × 10–12", r:90},
-    {d:"shoulder", alt:["shoulder_db"], s:"2 × 10–12", r:90},
-    {d:"leg_ext", alt:[], s:"2 × 12–15", r:60},
-    {d:"plank", alt:["side_plank"], s:"3 × 30″", r:45}]},
-  B:{day:"Mercoledì", sub:"Trazione, femorali e glutei", slots:[
-    {d:"row_machine", alt:["row_db","pulley"], s:"3 × 10–12", r:90},
-    {d:"leg_curl_seat", alt:["leg_curl_stand","leg_curl"], s:"3 × 10–12", r:90},
-    {d:"pec", alt:["fly_db"], s:"3 × 12", r:60},
-    {d:"glute_bridge", alt:["glute_bridge_1","abductor","hip"], s:"3 × 12", r:60},
-    {d:"pushdown", alt:["pushdown_rope"], s:"2 × 12–15", r:60},
-    {d:"deadbug", alt:[], s:"3 × 8 per lato", r:45}]},
-  C:{day:"Venerdì", sub:"Misto, spalle e stabilità", slots:[
-    {d:"leg_press", alt:["goblet"], s:"3 × 10–12", r:120},
-    {d:"chest_inc", alt:["chest_inc_db"], s:"3 × 10–12", r:90},
-    {d:"lat_v", alt:["lat_under"], s:"3 × 10–12", r:90},
+  A:{day:"Lunedì", sub:"Gambe, spinta e dorsali", slots:[
+    {d:"leg_press", alt:["goblet"], s:"3 × 10–12", r:150},
+    {d:"chest", alt:["chest_db","chest_inc"], s:"3 × 12", r:150},
+    {d:"lat", alt:["lat_under","lat_v","high_row"], s:"3 × 12", r:150},
+    {d:"leg_curl_seat", alt:["leg_curl_stand"], s:"3 × 12", r:90},
+    {d:"curl", alt:["curl_rope","hammer"], s:"3 × 10–12", r:90},
     {d:"lateral", alt:[], s:"2 × 12–15", r:60},
-    {d:"crunch", alt:["cable_crunch"], s:"3 × 12", r:60},
-    {d:"pallof", alt:["side_plank","farmer"], s:"3 × 10 per lato", r:60}]},
+    {d:"plank", alt:["side_plank"], s:"3 × 60″", r:60}]},
+  B:{day:"Giovedì", sub:"Schiena, spalle e glutei", slots:[
+    {d:"leg_ext", alt:["goblet"], s:"3 × 12–15", r:90},
+    {d:"row_machine", alt:["pulley","row_db"], s:"3 × 12", r:150},
+    {d:"shoulder", alt:["shoulder_db"], s:"3 × 10", r:150},
+    {d:"glute_bridge", alt:["abductor","glute_bridge_1"], s:"3 × 12", r:90},
+    {d:"curl_rope", alt:["curl","hammer"], s:"3 × 10–12", r:90},
+    {d:"pushdown_rope", alt:["pushdown"], s:"2 × 15", r:60},
+    {d:"deadbug", alt:["crunch"], s:"3 × 8 per lato", r:60}]},
 };
 
 /* ---------- Ilenia: due sedute a settimana, tutto con gli elastici ---------- */
@@ -509,11 +515,11 @@ const DAYS_IL = {
 
 /* ---------- i due profili: dati separati, nessuno vede quelli dell'altra ---------- */
 const PROF = {
-  christian:{n:"Christian", key:"scheda.v1", days:DAYS_CH, cardio:true, food:true, wd:{1:"A",3:"B",5:"C"},
-    heroP:["Piano di 6 settimane","Full body A·B·C","Tre allenamenti diversi, macchine e cavi, circa 65–75 minuti."],
-    weekNote:"Giorni spostabili, purché tra una seduta e l'altra ci sia almeno un giorno di riposo. Sempre in ordine A, B, C.",
+  christian:{n:"Christian", key:"scheda.v1", days:DAYS_CH, cardio:true, food:true, wd:{1:"A",4:"B"},
+    heroP:["Due sedute a settimana","Full body A·B","Due allenamenti che si alternano, macchine e cavi, circa 60 minuti."],
+    weekNote:"Giorni spostabili, purché tra le due sedute ci siano almeno due giorni di riposo. Fissali a calendario: due fatte valgono più di tre programmate.",
     dayNote:"esercizi, circa 40 minuti di pesi più cardio.",
-    tip:"Tocca il tempo di recupero dopo ogni serie. Se una macchina è occupata o non c'è, scegli un'alternativa: la scelta resta salvata. Il cardio è in fondo alla pagina."},
+    tip:"Tocca il tempo di recupero dopo ogni serie e aspetta che finisca davvero: sui primi tre esercizi sono 2 minuti e mezzo. Se una macchina è occupata, scegli un'alternativa: la scelta resta salvata. Il cardio è in fondo alla pagina."},
   ilenia:{n:"Ilenia", key:"scheda.il.v1", days:DAYS_IL, bands:true, wd:{1:"A",4:"B"},
     heroP:["Piano con gli elastici","Due sedute a settimana","Tutto il corpo con le bande Fokky, circa 40 minuti in casa."],
     weekNote:"Giorni spostabili, purché tra le due sedute ci siano almeno due giorni di riposo.",
@@ -813,15 +819,16 @@ function viewPiano(){
 function pianoCh(){
   return `<h2 class="section">Ogni seduta</h2>
     <div class="blocks">
-      <div class="block"><b>10'</b><span>Riscaldo</span><small>Tapis 5% · 5,1 km/h</small></div>
+      <div class="block"><b>5'</b><span>Riscaldo</span><small>Cyclette o tapis</small></div>
       <div class="block"><b class="hot">40'</b><span>Pesi</span><small>Scheda del giorno</small></div>
-      <div class="block"><b>15–25'</b><span>Cardio</span><small>Cresce ogni 2 settimane</small></div>
+      <div class="block"><b>15–20'</b><span>Cardio</span><small>Camminata in salita</small></div>
     </div>
     <p class="note">Prima del primo esercizio fai sempre 1 serie di riscaldamento da 15 ripetizioni con metà del peso.</p>
 
-    <h2 class="section">Le fasi</h2>
-    <div class="phase"><header><h3>Settimane 1–2</h3><em>Adattamento</em></header><p>2 serie per esercizio: la terza riga del registro lasciala vuota. Lasci 3–4 ripetizioni in serbo.</p></div>
-    <div class="phase hot"><header><h3>Settimane 3–6</h3><em>Costruzione</em></header><p>Serie piene come da scheda, lasci circa 2 ripetizioni in serbo. Dalla settimana 7 si passa allo split per gruppi muscolari.</p></div>
+    <h2 class="section">Le regole del carico</h2>
+    <div class="phase hot"><header><h3>Recupero</h3><em>2'30″</em></header><p>Sui primi tre esercizi aspetta il timer fino in fondo. Ripartire presto è il motivo per cui la seconda serie crollava da 12 a 7 ripetizioni.</p></div>
+    <div class="phase"><header><h3>Carico fisso</h3><em>Niente piramidi</em></header><p>Stesso peso su tutte le serie dell'esercizio. Si cambia solo quando le chiudi tutte al massimo delle ripetizioni.</p></div>
+    <div class="phase"><header><h3>Se salti</h3><em>Riprendi uguale</em></header><p>Dopo una settimana ferma riparti dagli stessi carichi, non da capo.</p></div>
     <div class="dark"><h3>Come leggere «3 × 10–12»</h3><p>3 serie da 10 a 12 ripetizioni. Parti col peso con cui arrivi a 10. Quando fai 12 in tutte le serie, la volta dopo sali di uno step e riparti da 10. Il registro te lo segnala da solo.</p></div>
 
 `;
@@ -915,7 +922,56 @@ function regoleCh(){
   </main></div>`;
 }
 
-/* ---------- pasti ---------- */
+/* ---------- pasti ----------
+   Le foto stanno in IndexedDB e non in localStorage: ridotte pesano ~80 KB l'una
+   e riempirebbero la quota in due settimane. Non finiscono nel backup JSON:
+   sono un promemoria visivo, il dato vero è il nome e le kcal. */
+const PHDB = (() => {
+  let p = null;
+  const open = () => p = p || new Promise((res, rej) => {
+    const r = indexedDB.open("scheda-foto", 1);
+    r.onupgradeneeded = () => r.result.createObjectStore("ph");
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  });
+  const tx = (mode, fn) => open().then(db => new Promise((res, rej) => {
+    const t = db.transaction("ph", mode), q = fn(t.objectStore("ph"));
+    t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error);
+  }));
+  return {
+    put: (k,v) => tx("readwrite", s => s.put(v,k)),
+    get: k => tx("readonly", s => s.get(k)),
+    del: k => tx("readwrite", s => s.delete(k)),
+    keys: () => tx("readonly", s => s.getAllKeys()),
+  };
+})();
+// le foto oltre tre settimane non servono più: le kcal ormai sono registrate
+function sweepPhotos(){
+  const lim = new Date(Date.now() - 21*864e5).toISOString().slice(0,10);
+  PHDB.keys().then(ks => (ks||[]).forEach(k => { if(String(k).slice(0,10) < lim) PHDB.del(k); })).catch(()=>{});
+}
+function shrink(file){
+  return new Promise((res, rej) => {
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      const sc = Math.min(1, 900 / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width*sc); c.height = Math.round(img.height*sc);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob(b => b ? res(b) : rej(new Error("no blob")), "image/jpeg", 0.68);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error("no img")); };
+    img.src = url;
+  });
+}
+let phUrls = [];
+function paintPhotos(){
+  phUrls.forEach(u => URL.revokeObjectURL(u)); phUrls = [];
+  document.querySelectorAll("img[data-ph]").forEach(im => {
+    PHDB.get(im.dataset.ph).then(b => { if(!b) return; const u = URL.createObjectURL(b); phUrls.push(u); im.src = u; }).catch(()=>{});
+  });
+}
+
 const dayItems = d => DB.food.days[d] || [];
 const dayKcal = d => dayItems(d).reduce((a,x) => a + (+x.kcal || 0), 0);
 const qtyText = x => x.g ? `${x.g} g` : "";
@@ -930,11 +986,12 @@ function copyText(){
   return `Pasti di ${niceDate(d)}\n` + MEALS.map(([k,lab]) => {
     const rows = it.filter(x => x.m === k);
     if(!rows.length) return "";
-    return `\n${lab}\n` + rows.map(x => `- ${x.n}${x.g?` ${x.g} g`:""} — ${x.kcal} kcal`).join("\n");
-  }).filter(Boolean).join("\n") + `\n\nTotale: ${dayKcal(d)} kcal`;
+    return `\n${lab}\n` + rows.map(x => `- ${x.n}${x.g?` ${x.g} g`:""} — ${x.kcal == null ? "da stimare" + (x.ph ? " (foto)" : "") : x.kcal + " kcal"}`).join("\n");
+  }).filter(Boolean).join("\n") + `\n\nTotale finora: ${dayKcal(d)} kcal`;
 }
 function viewPasti(){
   const d = today(), tot = dayKcal(d), tg = DB.food.target;
+  const todo = dayItems(d).filter(x => x.kcal == null).length;
   const pct = tg ? Math.min(100, Math.round(tot / tg * 100)) : 0;
   const over = tg && tot > tg;
   const rest = tg ? tg - tot : null;
@@ -945,8 +1002,9 @@ function viewPasti(){
     return `<section class="meal">
       <h3>${lab}<span>${sub} kcal</span></h3>
       ${rows.length ? `<ul>${rows.map(([x,i]) => `<li>
+        ${x.ph ? `<img class="thumb" data-ph="${esc(x.ph)}" alt="Foto di ${esc(x.n)}" width="44" height="44">` : ""}
         <span class="nm">${esc(x.n)}${qtyText(x)?`<em>${qtyText(x)}</em>`:""}</span>
-        <b>${x.kcal}</b>
+        <button type="button" class="kc ${x.kcal == null ? "todo" : ""}" data-kcal="${i}">${x.kcal == null ? "stima" : x.kcal}</button>
         <button type="button" data-del="${i}" aria-label="Togli ${esc(x.n)}">×</button></li>`).join("")}</ul>`
         : `<p class="empty">Niente ancora.</p>`}
     </section>`;
@@ -961,7 +1019,7 @@ function viewPasti(){
   const trend = avg7 !== null && avg14 !== null && Object.keys(DB.food.weights).length >= 8
     ? `Media ultimi 7 giorni ${avg7} kg, ultimi 14 ${avg14} kg.` : (avg7 !== null ? `Media ultimi 7 giorni: ${avg7} kg.` : "");
 
-  return `<div data-day="B">${hero("Alimentazione","Pasti","Quello che mangi, in kcal. Il target lo dà il nutrizionista.")}
+  return `<div data-day="B">${hero("Alimentazione","Pasti","Quello che mangi, in kcal, e il peso della mattina.")}
   <main>
     <div class="kcal">
       <div class="row">
@@ -969,7 +1027,7 @@ function viewPasti(){
         ${tg ? `<div class="goal">${over ? "sopra di" : "ancora"}<b>${Math.abs(rest)}</b>kcal</div>` : ""}
       </div>
       ${tg ? `<div class="track"><div class="fill ${over?"over":""}" style="width:${pct}%"></div></div>` : ""}
-      <p class="sub">${tg ? `Target ${tg} kcal al giorno.` : "Imposta il target che ti ha dato il nutrizionista qui sotto."}</p>
+      <p class="sub">${tg ? `Target ${tg} kcal al giorno.` : "Imposta il tuo target qui sotto."}${todo ? ` ${todo} ${todo===1?"voce ancora da stimare":"voci ancora da stimare"}.` : ""}</p>
     </div>
 
     <h2 class="section">Oggi</h2>
@@ -985,6 +1043,9 @@ function viewPasti(){
       </div>
       <p class="hintf" id="fhint">Scegli un alimento dalla lista e metti i grammi: le kcal le calcola l'app. Oppure scrivi tutto a mano.</p>
       <button type="submit">Aggiungi</button>
+      <label class="photob" for="phin">Oppure fotografa il pasto</label>
+      <input type="file" id="phin" accept="image/*" capture="environment" hidden>
+      <p class="hintf">La foto resta sul telefono per tre settimane e sostituisce la descrizione: le kcal le metti dopo, toccando «stima».</p>
     </form>
     <datalist id="foodlist">${FOOD.map(f => `<option value="${esc(f[0])}">`).join("")}</datalist>
 
@@ -999,7 +1060,7 @@ function viewPasti(){
     <form class="wbox" id="tform">
       <input name="t" type="number" inputmode="numeric" min="0" step="10" placeholder="kcal" value="${tg || ""}">
       <button type="submit">Salva</button>
-      <p>Mettici il numero che ti ha dato il nutrizionista. L'app non se lo inventa.</p>
+      <p>Il numero concordato. Rivedilo dopo 3 settimane sulla media del peso, non prima.</p>
     </form>
 
     <h2 class="section">Da mandare a Claude</h2>
@@ -1041,11 +1102,13 @@ function render(keepScroll){
   document.querySelectorAll("#nav a").forEach(a => {
     if(a.dataset.v===v) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current");
   });
+  if(v === "pasti") paintPhotos();
   window.scrollTo(0, keepScroll ? y : 0);
 }
 window.addEventListener("hashchange", () => render(false));
 renderNav();
 render(false);
+sweepPhotos();
 
 /* ---------- interazioni ---------- */
 app.addEventListener("click", e => {
@@ -1060,10 +1123,18 @@ app.addEventListener("click", e => {
     document.querySelector(`#ex-${L}${i === "cardio" ? "c" : i} .alt[data-k="${a.dataset.k}"]`)?.focus({preventScroll:true});
     return;
   }
+  const kc = e.target.closest("[data-kcal]");
+  if(kc){
+    const it = (DB.food.days[today()] || [])[+kc.dataset.kcal]; if(!it) return;
+    const v = prompt(`Quante kcal per «${it.n}»?`, it.kcal == null ? "" : it.kcal);
+    if(v === null) return;
+    it.kcal = v.trim() === "" ? null : Math.round(+v) || 0;
+    persist(); render(true); return;
+  }
   const del = e.target.closest("[data-del]");
   if(del){
-    const list = DB.food.days[today()] || [];
-    list.splice(+del.dataset.del, 1);
+    const list = DB.food.days[today()] || [], gone = list.splice(+del.dataset.del, 1)[0];
+    if(gone && gone.ph) PHDB.del(gone.ph).catch(()=>{});
     if(!list.length) delete DB.food.days[today()];
     persist(); render(true); return;
   }
@@ -1156,6 +1227,21 @@ app.addEventListener("input", e => {
   if(e.target.name === "n" && hit[2] && f.g.value === "") f.g.value = hit[2];
   if(f.g.value !== "") f.kcal.value = Math.round(hit[1] * +f.g.value / 100);
   hint.textContent = `${hit[0]}: ${hit[1]} kcal per 100 g${hit[2] ? ` · un pezzo ≈ ${hit[2]} g` : ""}.`;
+});
+
+/* foto del pasto: ridotta, salvata in IndexedDB, kcal da mettere dopo */
+app.addEventListener("change", e => {
+  if(e.target.id !== "phin" || !e.target.files[0]) return;
+  const inp = e.target, f = inp.closest("#addf"), nome = f.n.value.trim();
+  shrink(inp.files[0]).then(blob => {
+    const id = `${today()}-${Date.now()}`;
+    return PHDB.put(id, blob).then(() => {
+      const it = {m:f.m.value, n: nome || "Pasto in foto", kcal:null, ph:id};
+      if(f.g.value !== "") it.g = +f.g.value;
+      (DB.food.days[today()] = DB.food.days[today()] || []).push(it);
+      persist(); inp.value = ""; render(true);
+    });
+  }).catch(() => { inp.value = ""; alert("Non sono riuscito a salvare la foto. Riprova, o descrivi il pasto a mano."); });
 });
 
 app.addEventListener("change", e => {

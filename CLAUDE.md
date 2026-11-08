@@ -38,13 +38,14 @@ I chili sono indicativi: con l'elastico la resistenza cresce man mano che lo all
 
 ## Il piano di allenamento
 
-- **Settimane 1–6: full body A·B·C**, lunedì A (spinta, quadricipiti, spalle), mercoledì B (trazione, femorali, glutei), venerdì C (misto, spalle, stabilità). Giorni spostabili con almeno un giorno di riposo in mezzo.
-- Fasi: settimane 1–2 adattamento (2 serie, 3–4 ripetizioni in serbo); settimane 3–6 costruzione (serie piene, circa 2 in serbo).
+- **Da novembre 2026: full body A·B su due giorni**, lunedì A (gambe, spinta, dorsali), giovedì B (schiena, spalle, glutei). Prima erano tre giorni A·B·C, ma in sei settimane ne aveva fatte cinque in tutto: meglio due sedute davvero fatte. Giorni spostabili con almeno due giorni di riposo in mezzo.
+- Ogni seduta ha un curl per i bicipiti (`curl`, `curl_rope`, `hammer`): nella versione a tre giorni mancavano del tutto e se n'è accorto lui.
+- **Recupero 2'30″ sui primi tre esercizi.** La seconda serie di shoulder press gli crollava da 12 a 7 ripetizioni: era il recupero corto, non il carico. Carico fisso su tutte le serie, niente piramidi improvvisate.
 - **Progressione doppia** su range 10–12: si parte col peso che permette 10 ripetizioni; quando tutte le serie arrivano al massimo del range, +1 step e si riparte dal minimo. L'app mostra "Oggi sali di uno step" quando succede.
 - Riscaldamento: 10' tapis 5% a 5,1 km/h, più una serie da 15 con metà peso prima del primo esercizio.
 - **Cardio dopo i pesi**: camminata in salita. Sett. 1–2: 15' al 5% a 5,1 km/h. Sett. 3–4: 20' al 7%. Sett. 5+: 20–25' all'8–10% a 5,3. Test della parola per l'intensità. Cyclette 60–70 rpm come alternativa.
-- **Settimana 7+: split per gruppi muscolari** (già concordato, non ancora implementato nell'app): lunedì petto/spalle/tricipiti, mercoledì gambe/glutei/addome (leg press 4 serie), venerdì schiena/bicipiti/core.
-- Checkpoint: BIA di partenza (fatta prima di allenarsi) e nuova BIA a fine settimana 6.
+- Lo split per gruppi muscolari resta un'idea per quando le due sedute saranno un'abitudine stabile, non prima.
+- Checkpoint: BIA di partenza (fatta prima di allenarsi) e nuova BIA dopo otto settimane.
 
 ### Il piano di Ilenia
 
@@ -58,9 +59,13 @@ Regole da trainer: niente esercizi ad alto impatto (salti, corsa) finché il pes
 
 ### Alimentazione
 
-Christian è seguito da un nutrizionista. **L'app traccia, non prescrive**: il target giornaliero di kcal lo imposta lui con il numero che gli ha dato il nutrizionista, e l'app non lo calcola né lo suggerisce. Nessun piano alimentare, nessun menu, nessun macro inventato.
+Christian ha un nutrizionista e ci tornerà; nel frattempo porta avanti il conteggio da solo e vuole arrivarci con sei settimane di dati veri. **L'app traccia, non prescrive**: il target giornaliero lo imposta lui a mano, l'app non lo calcola né lo suggerisce.
 
-Quello che invece si fa volentieri: stimare le kcal di un piatto che descrive o fotografa, dicendo sempre che è una stima; aiutarlo a leggere i suoi dati (media del peso, andamento delle kcal); tenere aggiornata la tabella `FOOD`. Se una stima è difficile, dillo invece di inventare un numero preciso.
+Punto di partenza di novembre 2026: fabbisogno stimato 2700–2800 kcal, target 2200, proteine 150–170 g. Si rivede dopo 3 settimane sulla media del peso a 7 giorni, non prima: ±200 kcal per volta. Non scendere sotto le 2000.
+
+Nel sangue di inizio novembre: trigliceridi, colesterolo e transaminasi sopra soglia. Alcol e zuccheri liquidi sono la leva su quei valori più delle calorie in sé, e il medico resta nel giro: se chiede qualcosa che sconfina nel clinico, dillo.
+
+Quello che si fa volentieri: stimare le kcal di un piatto che descrive o fotografa, dicendo sempre che è una stima; aiutarlo a leggere i suoi dati; tenere aggiornata la tabella `FOOD`. Se una stima è difficile, dillo invece di inventare un numero preciso. Nessun menu e nessun piano alimentare giorno per giorno.
 
 ## Architettura
 
@@ -113,6 +118,8 @@ Esercizi con elastico: `band:true` fa comparire il menu dei colori al posto dei 
 
 `normDB()` aggiunge il blocco `food` ai backup fatti prima che esistesse: i vecchi file continuano a importarsi.
 
+Le **foto dei pasti** stanno in IndexedDB (`scheda-foto`), non in localStorage: ridotte a 900 px e JPEG 0.68 pesano ~80 KB l'una e riempirebbero la quota in due settimane. Nell'item resta solo `ph` con la chiave. Non finiscono nel backup JSON e `sweepPhotos()` cancella quelle oltre le tre settimane: sono un promemoria visivo, il dato vero è il nome e le kcal. Un item con `kcal: null` è «da stimare» e non entra nel totale.
+
 `note` è opzionale (dolori, sensazioni, regolazioni della macchina) ed esiste anche sulle entry del cardio: serve a Christian per raccontare com'è andata, e finisce nel backup JSON. Una entry può avere solo la nota, senza serie.
 
 Il registro è per esercizio: la leg press di A e di C condividono lo storico. Una sola entry per giorno, un nuovo salvataggio la sovrascrive. La settimana del piano si calcola dalla prima data registrata (`planWeek()`). Esporta/Importa backup JSON in Regole, sempre sul profilo attivo: il file si chiama `scheda-<profilo>-<data>.json` e contiene un campo `profilo`. Importando un backup dell'altro profilo l'app chiede conferma. **Non rompere mai la compatibilità di questo formato**: se serve cambiarlo, scrivi una migrazione.
@@ -120,7 +127,7 @@ Il registro è per esercizio: la leg press di A e di C condividono lo storico. U
 ### Offline — regole che non si saltano
 
 1. Ogni file nuovo va aggiunto all'array `ASSETS` in `sw.js`.
-2. A ogni modifica di qualunque asset, incrementa `CACHE` in `sw.js` (ora `scheda-v7`).
+2. A ogni modifica di qualunque asset, incrementa `CACHE` in `sw.js` (ora `scheda-v9`).
 3. Niente risorse esterne a runtime (CDN, font remoti, API): tutto deve stare nel repo.
 4. Il timer di recupero usa `Date.now()` come riferimento, non il conteggio dei tick, così resta corretto se lo schermo si spegne.
 
